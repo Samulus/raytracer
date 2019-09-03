@@ -14,12 +14,10 @@ Ray::Ray(const glm::vec3& origin, const glm::vec3& direction)
         : origin(origin), direction(glm::normalize(direction)), depth(0) {
 }
 
+Ray::~Ray() = default;
 
-/*
-Ray::Ray(const Ray& other) : origin(other.origin), direction(other.direction), depth(other.depth) {
-}
- */
+Ray& Ray::operator=(const Ray& other) = default;
 
-glm::vec3 Ray::pointWithScalar(const float& t) const {
+glm::vec3 Ray::pointWithScalar(float t) const {
     return origin + (t * direction);
 }
