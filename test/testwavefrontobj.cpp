@@ -21,5 +21,4 @@ TEST_CASE("Each face reports scalar intersection") {
 
     const auto ray = Ray(glm::vec3(0), glm::vec3(0, 0, -1));
     meshInstance.getIntersectionScalarForRay(ray);
-    std::cout << "test" << std::endl;
 }

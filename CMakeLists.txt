@@ -54,7 +54,10 @@ add_executable(raytracer_release
         src/material.h
         src/raycollision.h
         src/wavefrontobj.h
-        src/meshinstance.cpp src/meshinstance.h)
+        src/meshinstance.cpp
+        src/meshinstance.h
+        src/mollertrumbore.h
+        src/mollertrumbore.cpp)
 
 target_link_libraries(raytracer_release PRIVATE glfw)
 target_link_libraries(raytracer_release PRIVATE GLEW::GLEW)
@@ -77,6 +80,7 @@ add_executable(raytracer_test
         test/testplane.cpp
         test/testraytracer.cpp
         test/testwavefrontobj.cpp
+        test/testmollertrumbore.cpp
         # Main Program Code
         src/geometry.cpp
         src/geometry.h
@@ -103,7 +107,9 @@ add_executable(raytracer_test
         src/material.h
         src/wavefrontobj.h
         src/meshinstance.cpp
-        src/meshinstance.h)
+        src/meshinstance.h
+        src/mollertrumbore.h
+        src/mollertrumbore.cpp)
 
 target_include_directories(raytracer_test PRIVATE src)
 target_link_libraries(raytracer_test PRIVATE doctest::doctest)
