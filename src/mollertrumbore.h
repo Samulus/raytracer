@@ -9,10 +9,9 @@
 #include <glm/glm.hpp>
 #include "ray.h"
 
-glm::vec3 getNormalForTriangle(
-        const glm::vec3& v0,
-        const glm::vec3& v1,
-        const glm::vec3& v2);
+glm::vec3 getNormalForTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2);
+
+bool isEyeInFrontOfPlane(const Ray& ray, const glm::vec3& arbitraryPlanePoint);
 
 bool pointIsInsideTheTriangle(
         const glm::vec3& p,

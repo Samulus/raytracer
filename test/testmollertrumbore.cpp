@@ -6,7 +6,6 @@
 
 #include <doctest/doctest.h>
 #include <vector>
-#include <array>
 #include "mollertrumbore.h"
 
 TEST_CASE("getNormalForTriangle()") {
@@ -59,39 +58,29 @@ TEST_CASE("pointIsInsideTheTriangle") {
 }
 
 TEST_CASE("isRayIntersectingTriangle()") {
-
     const auto v0 = glm::vec3(0, 1, -1);
     const auto v1 = glm::vec3(1, 0 ,-1);
     const auto v2 = glm::vec3(-1, 0, -1);
 
-    SUBCASE("Viewer looking at triangle, but triangle is facing away from viewer.") {
-        const auto eyeRay = Ray(glm::vec3(0, 0.5, 0), glm::vec3(0, 0, -1));
-        REQUIRE(isRayIntersectingTriangle(eyeRay, v0, v1, v2) < 0);
-    }
-
-    SUBCASE("Viewer looking at triangle and triangle is facing viewer.") {
+    // Collision Occurs
+    SUBCASE("Eye behind triangle, eye is looking at triangle, triangle is looking at eye, collision occurs") {
         const auto eyeRay = Ray(glm::vec3(0, 0.5, 0), glm::vec3(0, 0, -1));
         REQUIRE(isRayIntersectingTriangle(eyeRay, v0, v2, v1) > 0);
     }
 
+    // No Collision Occurs
+    SUBCASE("Eye behind triangle, eye is looking at triangle, but triangle is facing away from viewer, no collision") {
+        const auto eyeRay = Ray(glm::vec3(0, 0.5, 0), glm::vec3(0, 0, -1));
+        REQUIRE(isRayIntersectingTriangle(eyeRay, v0, v1, v2) < 0);
+    }
 
+    SUBCASE("Eye in front of triangle, eye is looking in same direction as triangle, no collision") {
+        const auto eyeRay = Ray(glm::vec3(0, 0.5, -2), glm::vec3(0, 0, 1));
+        REQUIRE(isRayIntersectingTriangle(eyeRay, v0, v2, v1) < 0);
+    }
 
+    SUBCASE("Eye in front of triangle, eye and triangle normals oppose each other, no collision") {
+        const auto eyeRay = Ray(glm::vec3(0, 0.5, -2), glm::vec3(0, 0, -1));
+        REQUIRE(isRayIntersectingTriangle(eyeRay, v0, v2, v1) < 0);
+    }
 }
-
-/*
-TEST_CASE("Möller-Trumbore implementation respects face occlusion") {
-    // CCW order
-    const auto v0 = glm::vec3(0, 1, 0); //  v0
-    const auto v1 = glm::vec3(0, 0, 0); //  . .
-    const auto v2 = glm::vec3(1, 0, 0); //  v1.v2
-    const auto normal = glm::vec3(0, 0, 1); // Triangle is front-facing.
-
-    const auto frontIntersection = Ray(glm::vec3(0.5, 0.5, 1), glm::vec3(0, 0, -1));
-    const auto frontScalar = mollertrumboreIntersection(frontIntersection, v0, v1, v2, normal);
-    REQUIRE(frontScalar > 0);
-
-    const auto rearIntersection = Ray(glm::vec3(0.5, 0.5, -1), glm::vec3(0, 0, 1));
-    const auto rearScalar = mollertrumboreIntersection(rearIntersection, v0, v1, v2, normal);
-    REQUIRE(rearScalar < 0);
-}
- */
