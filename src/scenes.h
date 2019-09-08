@@ -30,13 +30,14 @@ static const std::shared_ptr<WavefrontObj> RINGS_MESH = std::make_shared<Wavefro
 
 namespace Scene {
     void ballsHoveringAboveGlobe(World& world, DiffuseLighting& lightTransport) {
-        lightTransport.addLight(std::make_unique<SunLight>(SunLight(glm::vec3(0, -1, -1), WHITE, 20.0f)));
+        lightTransport.addLight(std::make_unique<SunLight>(SunLight(glm::vec3(0, -1, 0), WHITE, 20.0f)));
 
-        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(3, 0, 0), 0.2, OPAQUE_GREEN)));
-        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(0, 0, 0), 0.2, OPAQUE_RED)));
-        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(-3, 0, 0), 0.2, OPAQUE_BLUE)));
+        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(0.5, 1, 0), 0.1, OPAQUE_GREEN)));
+        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(0, 1, 0), 0.1, OPAQUE_RED)));
+        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(-0.5, 1, 0), 0.1, OPAQUE_BLUE)));
 
-        world.addGeometry(std::make_shared<Plane>(Plane(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0), OPAQUE_WHITE)));
+        // Cornell Box
+        world.addGeometry(std::make_shared<Plane>(Plane(glm::vec3(0, 0, -100), glm::vec3(0, 1, 0), OPAQUE_WHITE)));
     }
 
     void simpleSunTest(World& world, DiffuseLighting& lightTransport) {

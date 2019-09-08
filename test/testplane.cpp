@@ -5,95 +5,50 @@
 //
 
 #include <doctest/doctest.h>
+#include <map>
 #include "color.h"
 #include "plane.h"
 #include "albedo.h"
 
-/*
-TEST_CASE("Plane @ (0,0,-1) with normal (0,0,1) visible from (0,0,0) looking at (0,0,-1)") {
-    const auto eyeOrigin = glm::vec3(0,0,0);
-    const auto eyeDirection = glm::vec3(0, 0, -1);
-    const auto eyeRay = Ray(eyeOrigin, eyeDirection, 0);
+TEST_CASE("Plane::getIntersectionScalarForRay(…)") {
 
-    const auto planeOrigin = glm::vec3(0, 0, -1);
-    const auto planeNormal = glm::vec3(0, 0, 1);
-    const auto OPAQUE_WHITE = Material(WHITE, AVERAGE_ALBEDO, MaterialType::Diffuse, 0);
-    const auto wall = Plane(planeOrigin, planeNormal, OPAQUE_WHITE);
-    const auto scalar = wall.getIntersectionScalarForRay(eyeRay);
-    REQUIRE(scalar > 0);
+    const auto opaqueWhite = Material(WHITE, AVERAGE_ALBEDO, MaterialType::Diffuse, 0);
+    std::map<std::string, glm::vec3> eyeDirections =  {
+        {"forward", glm::vec3(0, 0, -1)},
+        {"behind",  glm::vec3(0, 0, 1)},
+        {"left",    glm::vec3(-1, 0, 0)},
+        {"right",   glm::vec3(1, 0, 0)},
+        {"top",     glm::vec3(0, 1, 0)},
+        {"bottom",  glm::vec3(0, -1, 0)}
+    };
+
+    SUBCASE("Eye looking at each plane in a box triggers a collision") {
+        for (const auto& direction : eyeDirections) {
+            const auto planeOrigin = direction.second;
+            const auto planeNormal = direction.second * -1.0f;
+            const auto eyeRay = Ray(glm::vec3(0), direction.second);
+            const auto plane = Plane(planeOrigin, planeNormal, opaqueWhite);
+            REQUIRE_MESSAGE(plane.getIntersectionScalarForRay(eyeRay) > 0, "Face: " + direction.first);
+        }
+    }
+
+    SUBCASE("Plane is in front of eye, but eye direction and plane normal are the same, no collisions should occur") {
+        for (const auto& direction : eyeDirections) {
+            const auto planeOrigin = direction.second; // Planes stay in the same location, but their normals are
+            const auto planeNormal = direction.second; // NOT inverted anymore, and should not be visible.
+            const auto eyeRay = Ray(glm::vec3(0), direction.second);
+            const auto plane = Plane(planeOrigin, planeNormal, opaqueWhite);
+            REQUIRE_MESSAGE(plane.getIntersectionScalarForRay(eyeRay) < 0, "Face: " + direction.first);
+        }
+    }
+
+    SUBCASE("Plane is behind eye, AND plane is facing away from eye") {
+        for (const auto& direction : eyeDirections) {
+            const auto planeOrigin = direction.second;
+            const auto planeNormal = direction.second;
+            const auto eyeRay = Ray(glm::vec3(0), direction.second * -1.0f);
+            const auto plane = Plane(planeOrigin, planeNormal, opaqueWhite);
+            REQUIRE_MESSAGE(plane.getIntersectionScalarForRay(eyeRay) < 0, "Face: " + direction.first);
+        }
+    }
 }
-
-TEST_CASE("Plane @ (0,0,-1.01) with normal (0,0, -1), is not visible from (0,0,0) looking at (0, 0, -1") {
-    const auto eyeOrigin = glm::vec3(0,0,0);
-    const auto eyeDirection = glm::vec3(0, 0, -1);
-    const auto eyeRay = Ray(eyeOrigin, eyeDirection, 0);
-
-    const auto planeOrigin = glm::vec3(0, 0, -1.01);
-    const auto planeNormal = glm::vec3(0, 0, -1);
-
-    const auto wall = Plane(WHITE, AVERAGE_ALBEDO, planeOrigin, planeNormal, 0.1f);
-    const auto scalar = wall.getIntersectionScalarForRay(eyeRay);
-    REQUIRE(scalar < 0);
-}
-
-TEST_CASE("Plane @ (0,0,-1.01) with normal (0,0, +1), is not visible from (0,0,0) looking at (0,0, -1") {
-    const auto eyeOrigin = glm::vec3(0,0,0);
-    const auto eyeDirection = glm::vec3(0, 0, -1);
-    const auto eyeRay = Ray(eyeOrigin, eyeDirection, 0);
-
-    const auto planeOrigin = glm::vec3(0, 0, -1.01);
-    const auto planeNormal = glm::vec3(0, 0, 1);
-
-    const auto wall = Plane(WHITE, AVERAGE_ALBEDO, planeOrigin, planeNormal, 0.1f);
-    const auto scalar = wall.getIntersectionScalarForRay(eyeRay);
-    REQUIRE(scalar < 0);
-}
-
-
-TEST_CASE("Plane facing is intersecting") {
-    const auto planeOrigin = glm::vec3(0, 0, -2);
-    const auto planeNormal = glm::vec3(0, 0, 1);
-    const auto wall = Plane(WHITE, AVERAGE_ALBEDO, planeOrigin, planeNormal, 1);
-
-    // Player is looking directly at the wall
-    const auto eyeOrigin = glm::vec3(0,0,0);
-    const auto eyeDirection = glm::vec3(0, 0, -1);
-    const auto eyeRay = Ray(eyeOrigin, eyeDirection, 0);
-
-    auto scalar = wall.getIntersectionScalarForRay(eyeRay);
-    REQUIRE_MESSAGE(scalar > 0, "Should be positive as face is intersecting");
-}
-
-TEST_CASE("Eye is above plane looking straight down") {
-    const auto planeOrigin = glm::vec3(0, 0, 0);
-    const auto planeNormal = glm::vec3(0, 1, 0);
-    const auto wall = Plane(WHITE, AVERAGE_ALBEDO, planeOrigin, planeNormal, 1);
-
-    const auto eyeOrigin = glm::vec3(0, 0, 0);
-    const auto eyeDirection = glm::vec3(0, 1, 0);
-    auto eyeRay = Ray(eyeOrigin, eyeDirection, 0);
-    auto scalar = wall.getIntersectionScalarForRay(eyeRay);
-            REQUIRE_MESSAGE(scalar > 0, "Scalar should be unsigned zero");
-}
-
-TEST_CASE("Plane is behind player, not visible, but normal is pointing in -Z direction") {
-    const auto planeOrigin = glm::vec3(0, 0, -2);
-    const auto planeNormal = glm::vec3(0, 0, -1);
-    const auto wall = Plane(WHITE, AVERAGE_ALBEDO, planeOrigin, planeNormal, 1);
-
-    const auto eyeOrigin = glm::vec3(0);
-    const auto eyeDirection = glm::vec3(0, 0, -1);
-    auto eyeRay = Ray(eyeOrigin, eyeDirection, 0);
-    auto scalar = wall.getIntersectionScalarForRay(eyeRay);
-    REQUIRE_MESSAGE(scalar < 0, "Scalar should be unsigned zero");
-}
-
-TEST_CASE("SEVDALIZA") {
-    const auto eye = glm::vec3(0,0,-1);
-    const auto plane = glm::vec3(0,0,1);
-    const auto crossA = glm::cross(eye, plane);
-    const auto crossB = glm::cross(-eye, -plane);
-
-    REQUIRE(crossA == crossB);
-}
- */

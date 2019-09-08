@@ -8,6 +8,7 @@
 #include "ray.h"
 #include <algorithm>
 #include <glm/gtx/string_cast.hpp>
+#include "mollertrumbore.h"
 
 Plane::Plane(glm::vec3 origin, glm::vec3 normal, Material material) : Geometry(origin, material), normal(glm::normalize(normal)) {
 }
@@ -18,6 +19,12 @@ Plane::~Plane() {
 float Plane::getIntersectionScalarForRay(const Ray &ray) const {
     float denom = glm::dot(normal, ray.direction);
     glm::vec3 planeToRayDirection = origin - ray.origin;
+
+    /*
+    if (isEyeInFrontOfPlane(ray, origin)) {
+        return -1.0f;
+    }
+     */
 
 
     // Plane normal and ray direction must be in opposition of each other

@@ -10,8 +10,10 @@
 #include "universe.h"
 #include <glm/ext/matrix_transform.hpp>
 
-static constexpr glm::vec3 SKY_LIGHT_COLOR = glm::vec3{0.8, 0.8, 0.8};
-static constexpr glm::vec3 SKY_DARK_COLOR = glm::vec3{0, 0.19607, 0.298039};
+static constexpr glm::vec3 SKY_LIGHT_COLOR = glm::vec3{0.6901, 0.62745, 0.88};
+static constexpr glm::vec3 SKY_DARK_COLOR = glm::vec3{0.89411, 0.69019, 0.75};
+//static constexpr glm::vec3 SKY_LIGHT_COLOR = glm::vec3{0.8, 0.8, 0.8};
+//static constexpr glm::vec3 SKY_DARK_COLOR = glm::vec3{0, 0.19607, 0.298039};
 static int MAXIMUM_REFLECTION_RECURSION = 5;
 
 RayTracer::RayTracer(RGBImage& rgbImage, const World& world, const LightTransport& lightTransport) :
@@ -23,7 +25,7 @@ void RayTracer::generateImage() {
     const auto maxWidth = rgbImage.getXRes();
     const auto maxHeight = rgbImage.getYRes();
 
-    const auto eyeTranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 0, 10));
+    const auto eyeTranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(0, 1, 1));
 
     rgbImage.forEachPixel(
             [&](GLubyte& r, GLubyte& g, GLubyte& b, unsigned int x, unsigned int y) -> void {
