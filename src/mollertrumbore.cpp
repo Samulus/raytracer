@@ -74,8 +74,10 @@ float isRayIntersectingTriangle(
     }
 
     const auto d = glm::dot(triangleNormal, v0);
-    const auto numerator = glm::dot(triangleNormal, ray.origin) + d;
-    const auto intersectionScalar = -numerator / rayPlaneDotProduct;
+    // TODO: Why does scratch a pixel use the ray origin instead of ray direction here?
+    //       I get incorrect results when using their algorithm.
+    const auto numerator = glm::dot(triangleNormal, ray.direction) + d;
+    const auto intersectionScalar = numerator / rayPlaneDotProduct;
 
     // Triangle is BEHIND the ray.
     if (intersectionScalar < 0) {

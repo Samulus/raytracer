@@ -32,14 +32,14 @@ static const std::shared_ptr<WavefrontObj> RINGS_MESH = std::make_shared<Wavefro
 namespace Scene {
     void ballsHoveringAboveGlobe(World& world, DiffuseLighting& lightTransport) {
         lightTransport.addLight(std::make_unique<SunLight>(SunLight(glm::vec3(0, -0.9, -0.1), WHITE, 20.0f)));
+        //lightTransport.addLight(std::make_unique<PointLight>(PointLight(glm::vec3(0, 1.5, 0), WHITE, 75.0f)));
 
-        const auto v0 = glm::vec3(0, 1.4, 0);
+        const auto v0 = glm::vec3(0, 1.35, 0);
         const auto v1 = glm::vec3(-0.2, 1.1, 0);
         const auto v2 = glm::vec3(0.2, 1.1, 0);
 
         world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(0.5, 1.2, 0), 0.1, OPAQUE_GREEN)));
         world.addGeometry(std::make_shared<Triangle>(Triangle(v0, v1, v2, OPAQUE_RED))); // black
-        //world.addGeometry(std::make_shared<Triangle>(Triangle(v0, v2, v1, OPAQUE_RED)));
         world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(-0.5, 1.2, 0), 0.1, OPAQUE_BLUE)));
 
         // Cornell Box
