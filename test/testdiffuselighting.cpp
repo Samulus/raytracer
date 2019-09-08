@@ -32,8 +32,8 @@ TEST_CASE("Ray casted from point on plane directly below sphere results in a col
     world.addGeometry(plane);
     diffuseLighting.addLight(std::move(sun));
 
-    auto pointUnderSphere = sphere->getOrigin();
-    pointUnderSphere.y = plane->getOrigin().y;
+    auto pointUnderSphere = sphereOrigin;
+    pointUnderSphere.y = planeOrigin.y;
 
     const auto rayFromSpotUnderSphereOnPlaneIntoPlane = Ray(pointUnderSphere, planeNormal);
     const auto rayCollision = diffuseLighting.rayIntersectsAnyGeometry(

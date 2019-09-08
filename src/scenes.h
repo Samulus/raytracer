@@ -12,6 +12,7 @@
 #include "albedo.h"
 #include "plane.h"
 #include "meshinstance.h"
+#include "triangle.h"
 
 static const auto mirror = Material(WHITE, AVERAGE_ALBEDO, MaterialType::Reflective, 0.8);
 static const auto OPAQUE_WHITE = Material(WHITE, AVERAGE_ALBEDO, MaterialType::Diffuse, 0);
@@ -30,14 +31,19 @@ static const std::shared_ptr<WavefrontObj> RINGS_MESH = std::make_shared<Wavefro
 
 namespace Scene {
     void ballsHoveringAboveGlobe(World& world, DiffuseLighting& lightTransport) {
-        lightTransport.addLight(std::make_unique<SunLight>(SunLight(glm::vec3(0, -1, 0), WHITE, 20.0f)));
+        lightTransport.addLight(std::make_unique<SunLight>(SunLight(glm::vec3(0, -0.9, -0.1), WHITE, 20.0f)));
 
-        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(0.5, 1, 0), 0.1, OPAQUE_GREEN)));
-        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(0, 1, 0), 0.1, OPAQUE_RED)));
-        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(-0.5, 1, 0), 0.1, OPAQUE_BLUE)));
+        const auto v0 = glm::vec3(0, 1.4, 0);
+        const auto v1 = glm::vec3(-0.2, 1.1, 0);
+        const auto v2 = glm::vec3(0.2, 1.1, 0);
+
+        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(0.5, 1.2, 0), 0.1, OPAQUE_GREEN)));
+        world.addGeometry(std::make_shared<Triangle>(Triangle(v0, v1, v2, OPAQUE_RED))); // black
+        //world.addGeometry(std::make_shared<Triangle>(Triangle(v0, v2, v1, OPAQUE_RED)));
+        world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(-0.5, 1.2, 0), 0.1, OPAQUE_BLUE)));
 
         // Cornell Box
-        world.addGeometry(std::make_shared<Plane>(Plane(glm::vec3(0, 0, -100), glm::vec3(0, 1, 0), OPAQUE_WHITE)));
+        world.addGeometry(std::make_shared<Plane>(Plane(glm::vec3(0, 0, 100), glm::vec3(0, 1, 0), OPAQUE_WHITE)));
     }
 
     void simpleSunTest(World& world, DiffuseLighting& lightTransport) {

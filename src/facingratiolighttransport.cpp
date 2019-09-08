@@ -21,14 +21,10 @@
  * @param geometry The intersected object
  */
 
-std::optional<Ray> FacingRatioLightTransport::calculatePixelColor(GLubyte& r, GLubyte& g, GLubyte& b,
-                                                                  Ray& primaryRay,
-                                                                  const glm::vec3& intersectionPoint,
-                                                                  const Geometry& geometry,
-                                                                  const World& world) {
-    const auto& color = geometry.getMaterial().color;
-    const auto& surfaceNormal = geometry.getSurfaceNormal(intersectionPoint);
-    float ratio = std::max(0.0f, glm::dot(surfaceNormal, -primaryRay.direction));
+std::optional<RayCollision> FacingRatioLightTransport::calculatePixelColor(GLubyte& r, GLubyte& g, GLubyte& b, const RayCollision& rayCollision, const World& world) const {
+    const auto& color = rayCollision.hitObject.value().get()->getMaterial().color;
+    const auto& surfaceNormal = rayCollision.hitObject.value().get()->getSurfaceNormal(rayCollision.intersectionPoint);
+    float ratio = std::max(0.0f, glm::dot(surfaceNormal, -rayCollision.ray.direction));
     r = ratio * color.r * 255.0f;
     g = ratio * color.g * 255.0f;
     b = ratio * color.b * 255.0f;

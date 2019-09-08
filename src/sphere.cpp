@@ -41,6 +41,5 @@ glm::vec3 Sphere::getSurfaceNormal(const glm::vec3& intersectionPoint) const {
 
 std::ostream& operator<<(std::ostream& os, const Sphere& sphere) {
     os << "Geometry Type: Sphere, ";
-    os << "Origin: " << glm::to_string(sphere.getOrigin()) << ", ";
     return os;
 }

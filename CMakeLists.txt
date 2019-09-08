@@ -57,7 +57,7 @@ add_executable(raytracer_release
         src/meshinstance.cpp
         src/meshinstance.h
         src/mollertrumbore.h
-        src/mollertrumbore.cpp)
+        src/mollertrumbore.cpp src/triangle.cpp src/triangle.h)
 
 target_link_libraries(raytracer_release PRIVATE glfw)
 target_link_libraries(raytracer_release PRIVATE GLEW::GLEW)

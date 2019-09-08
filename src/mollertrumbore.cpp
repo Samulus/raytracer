@@ -75,7 +75,7 @@ float isRayIntersectingTriangle(
 
     const auto d = glm::dot(triangleNormal, v0);
     const auto numerator = glm::dot(triangleNormal, ray.origin) + d;
-    const auto intersectionScalar = numerator / rayPlaneDotProduct;
+    const auto intersectionScalar = -numerator / rayPlaneDotProduct;
 
     // Triangle is BEHIND the ray.
     if (intersectionScalar < 0) {

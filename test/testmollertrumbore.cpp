@@ -65,6 +65,7 @@ TEST_CASE("isRayIntersectingTriangle()") {
     // Collision Occurs
     SUBCASE("Eye behind triangle, eye is looking at triangle, triangle is looking at eye, collision occurs") {
         const auto eyeRay = Ray(glm::vec3(0, 0.5, 0), glm::vec3(0, 0, -1));
+        // positive normal
         REQUIRE(isRayIntersectingTriangle(eyeRay, v0, v2, v1) > 0);
     }
 

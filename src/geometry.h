@@ -19,8 +19,5 @@ public:
     [[nodiscard]] virtual float getIntersectionScalarForRay(const Ray& ray) const = 0;
     [[nodiscard]] Material getMaterial() const { return material; }
     [[nodiscard]] virtual glm::vec3 getSurfaceNormal(const glm::vec3& intersectionPoint) const = 0;
-    [[nodiscard]] glm::vec3 getOrigin() const {
-        return origin;
-    }
 };
 

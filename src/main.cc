@@ -12,6 +12,7 @@
 #include "glfwmanager.h"
 #include "diffuselighting.h"
 #include "scenes.h"
+#include "facingratiolighttransport.h"
 #include <GLFW/glfw3.h>
 #include <spdlog/spdlog.h>
 
@@ -73,9 +74,10 @@ int main() {
     glfwSetFramebufferSizeCallback(window.getWindowPointer(), GLFWManager::onFrameBufferResize);
     spdlog::info("Framebuffer Resize  Callback initialized");
 
-    auto lightTransportAlgorithm = DiffuseLighting();
+    auto lightTransportAlgorithm = FacingRatioLightTransport();
     auto world = World();
-    Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
+    auto ignored = DiffuseLighting();
+    Scene::ballsHoveringAboveGlobe(world, ignored);
     //Scene::simpleSunTest(world, lightTransportAlgorithm);
 
     spdlog::info("World initialized");

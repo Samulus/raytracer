@@ -50,6 +50,5 @@ glm::vec3 Plane::getSurfaceNormal(const glm::vec3& ignored) const {
 
 std::ostream& operator<<(std::ostream& os, const Plane& sphere) {
     os << "Geometry Type: Plane, ";
-    os << "Origin: " << glm::to_string(sphere.getOrigin()) << ", ";
     return os;
 }

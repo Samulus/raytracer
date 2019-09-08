@@ -12,10 +12,6 @@ class FacingRatioLightTransport : public LightTransport {
 public:
     FacingRatioLightTransport() = default;
     ~FacingRatioLightTransport() override;
-    std::optional<Ray> calculatePixelColor(GLubyte& r, GLubyte& g, GLubyte& b,
-                             Ray& primaryRay,
-                             const glm::vec3& intersectionPoint,
-                             const Geometry& geometry,
-                             const World& world);
+    std::optional<RayCollision> calculatePixelColor(GLubyte& r, GLubyte& g, GLubyte& b, const RayCollision& rayCollision, const World& world) const override;
 };
 

@@ -28,7 +28,7 @@ TEST_CASE("Sphere behind another sphere is NOT reported as the nearest sphere.")
     auto rayTracer = RayTracer(image, world, lightTransportAlgorithm);
 
     const auto eyePosition = glm::vec3();
-    const auto eyeToFurtherSphere = furtherSphere->getOrigin() - eyePosition;
+    const auto eyeToFurtherSphere = glm::vec3(0, 0, -1.1) - eyePosition;
 
     const auto rayLookingAtFurtherSphere = Ray(eyePosition, eyeToFurtherSphere);
     const auto rayCollision = rayTracer.findNearestRayCollision(rayLookingAtFurtherSphere);
