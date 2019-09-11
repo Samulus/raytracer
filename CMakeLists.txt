@@ -109,7 +109,9 @@ add_executable(raytracer_test
         src/meshinstance.cpp
         src/meshinstance.h
         src/mollertrumbore.h
-        src/mollertrumbore.cpp)
+        src/mollertrumbore.cpp
+        src/triangle.cpp
+        src/triangle.h)
 
 target_include_directories(raytracer_test PRIVATE src)
 target_link_libraries(raytracer_test PRIVATE doctest::doctest)

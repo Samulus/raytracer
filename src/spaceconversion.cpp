@@ -9,8 +9,8 @@
 // The ORIGIN is translated, but the direction is untouched
 Ray SpaceConversion::pixelToPrimaryRay(unsigned int x, unsigned int y, unsigned int width, unsigned int height, float fovDegrees, const glm::mat4& translationMatrix) {
     auto ray = pixelToPrimaryRay(x, y, width, height, fovDegrees);
-    auto transOrigin = translationMatrix * glm::vec4(ray.origin, 1);
-    auto transDir = translationMatrix * glm::vec4(ray.direction, 0);
+    auto transOrigin = translationMatrix * glm::vec4(ray.origin, 0);
+    auto transDir = translationMatrix * glm::vec4(ray.direction, 1);
     return Ray(transOrigin, transDir);
 }
 

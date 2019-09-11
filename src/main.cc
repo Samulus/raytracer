@@ -75,8 +75,9 @@ int main() {
 
     auto lightTransportAlgorithm = DiffuseLighting();
     auto world = World();
-    Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
+    //Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
     //Scene::simpleSunTest(world, lightTransportAlgorithm);
+    Scene::sphereCastingShadowOnTriangle(world, lightTransportAlgorithm);
 
     spdlog::info("World initialized");
 

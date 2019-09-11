@@ -9,22 +9,30 @@
 #include <algorithm>
 static float SHADOW_BIAS = 1e-4;
 DiffuseLighting::~DiffuseLighting() = default;
+
 std::optional<RayCollision>
-DiffuseLighting::calculatePixelColor(GLubyte& r, GLubyte& g, GLubyte& b, const RayCollision& rayCollision,
-                                     const World& world) const {
+DiffuseLighting::calculatePixelColor(
+        GLubyte& r,
+        GLubyte& g,
+        GLubyte& b,
+        const RayCollision& rayCollision,
+        const World& world) const {
+
     if (rayCollision.hitObject == std::nullopt) {
-        throw std::runtime_error("DiffuseLighting::calculatePixelColor(…) invoked with a rayCollision missing an obj!");
+        throw std::runtime_error("No object to test.");
     }
+
     const auto materialType = rayCollision.hitObject.value()->getMaterial().materialType;
     const auto primaryRay = rayCollision.ray;
+
     if (materialType == MaterialType::Diffuse) {
         calculateDiffuseColor(r, g, b, rayCollision, world);
         return std::nullopt;
     }
+
     if (materialType == MaterialType::Reflective) {
         const auto& surfaceNormal = rayCollision.getSurfaceNormal();
-        const auto& reflectedDirection =
-                primaryRay.direction - 2.0f * glm::dot(primaryRay.direction, surfaceNormal) * surfaceNormal;
+        const auto& reflectedDirection = primaryRay.direction - 2.0f * glm::dot(primaryRay.direction, surfaceNormal) * surfaceNormal;
         const auto& reflectRayOrigin = rayCollision.intersectionPoint + (surfaceNormal * SHADOW_BIAS);
         const auto& newRayDirection = reflectedDirection;
         const auto& reflectionRay = Ray(reflectRayOrigin, reflectedDirection, primaryRay.depth + 1);
@@ -32,6 +40,7 @@ DiffuseLighting::calculatePixelColor(GLubyte& r, GLubyte& g, GLubyte& b, const R
         newRayCollision.isReflectedRay = true;
         return std::optional<RayCollision>(newRayCollision);
     }
+
     assert(false);
     return std::nullopt;
 }
@@ -67,20 +76,27 @@ void DiffuseLighting::calculateDiffuseColor(
 void DiffuseLighting::addLight(std::unique_ptr<Light> light) {
     lights.emplace_back(std::move(light));
 }
+
 std::optional<RayCollision>
 DiffuseLighting::rayIntersectsAnyGeometry(const Ray& occlusionRay, const World& world, float maxScalarDistance) const {
     for (const auto& currentGeometry : world.getGeometry()) {
         const auto intersectionScalar = currentGeometry->getIntersectionScalarForRay(occlusionRay);
         const auto isOccluded = intersectionScalar > 0 && intersectionScalar < maxScalarDistance;
+
         if (isOccluded) {
             auto result = RayCollision(occlusionRay, occlusionRay.pointWithScalar(intersectionScalar), currentGeometry);
             return std::optional<RayCollision>(result);
         }
+
     }
     return std::nullopt;
 }
-glm::vec3 DiffuseLighting::calculateLightContribution(const Light* light, const glm::vec3& intersectionPoint,
-                                                      const Geometry* hitObject) const {
+
+glm::vec3 DiffuseLighting::calculateLightContribution(
+        const Light* light,
+        const glm::vec3& intersectionPoint,
+        const Geometry* hitObject) const {
+
     auto outputColor = glm::vec3();
     auto inverseLightDirection = light->getInverseLightDirection(intersectionPoint);
     auto distanceToLight = light->getDistanceFromLightToIntersectionPoint(intersectionPoint);

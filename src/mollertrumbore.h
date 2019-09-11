@@ -7,6 +7,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <optional>
 #include "ray.h"
 
 glm::vec3 getNormalForTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2);
@@ -25,6 +26,7 @@ float isRayIntersectingTriangle(
         const glm::vec3& v0,
         const glm::vec3& v1,
         const glm::vec3& v2,
+        const std::optional<glm::vec3> normal = std::nullopt,
         bool isSingleSided = true);
 
 float mollertrumboreIntersection(

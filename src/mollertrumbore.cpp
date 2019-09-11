@@ -54,13 +54,14 @@ float isRayIntersectingTriangle(
         const glm::vec3& v0,
         const glm::vec3& v1,
         const glm::vec3& v2,
+        const std::optional<glm::vec3> normal,
         bool isSingleSided) {
 
     if (isEyeInFrontOfPlane(ray, v0)) {
         return -1;
     }
 
-    const auto triangleNormal = getNormalForTriangle(v0, v1, v2);
+    const auto triangleNormal = normal == std::nullopt ? getNormalForTriangle(v0, v1, v2) : normal.value();
     const auto doubleSidedDot = glm::dot(ray.direction, glm::normalize(triangleNormal));
 
     if (doubleSidedDot > 0 && isSingleSided) {
@@ -91,3 +92,49 @@ float isRayIntersectingTriangle(
 
     return intersectionScalar;
 }
+
+float mollertrumboreIntersection(
+        const Ray& ray,
+        const glm::vec3& v0,
+        const glm::vec3& v1,
+        const glm::vec3& v2,
+        const glm::vec3& ignored) {
+
+    if (isEyeInFrontOfPlane(ray, v0)) {
+        return -1;
+    }
+
+    const auto triangleNormal = getNormalForTriangle(v0, v1, v2);
+    const auto doubleSidedDot = glm::dot(ray.direction, glm::normalize(triangleNormal));
+
+    // TODO: We assume everything is single sided right now.
+    if (doubleSidedDot > 0) {
+        return -1.0f;
+    }
+
+    // Ray is parallel to triangle → No Collision
+    const auto rayPlaneDotProduct = glm::dot(triangleNormal, ray.direction);
+    if (std::abs(rayPlaneDotProduct) < TRIANGLE_PARALLEL_EPSILON) {
+        return -1.0f;
+    }
+
+    const auto d = glm::dot(triangleNormal, v0);
+    // TODO: Why does scratch a pixel use the ray origin instead of ray direction here?
+    //       I get incorrect results when using their algorithm.
+    const auto numerator = glm::dot(triangleNormal, ray.direction) + d;
+    const auto intersectionScalar = numerator / rayPlaneDotProduct;
+
+    // Triangle is BEHIND the ray.
+    if (intersectionScalar < 0) {
+        return -1.0f;
+    }
+
+    const auto intersectionPoint = ray.pointWithScalar(intersectionScalar);
+    if (!pointIsInsideTheTriangle(intersectionPoint, triangleNormal, v0, v1, v2)) {
+        return -1.0f;
+    }
+
+    return intersectionScalar;
+
+}
+

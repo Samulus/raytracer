@@ -6,6 +6,8 @@
 
 #include <doctest/doctest.h>
 #include <diffuselighting.h>
+#include <triangle.h>
+#include <glm/glm.hpp>
 #include "albedo.h"
 #include "color.h"
 #include "plane.h"
@@ -80,4 +82,60 @@ TEST_CASE("Sole plane is illuminated by extremely bright light") {
     REQUIRE(r == 255);
     REQUIRE(g == 255);
     REQUIRE(b == 255);
+}
+
+//                             (0, 0, -1)
+//                                 /\
+//   Triangle Normal:             /  \
+//      (0, 1, 0)                /    \
+//                              /      \
+//   Triangle color is         / [PL]   \
+//      WHITE                 /  ____    \
+//                           /  /    \    \
+//                          /  |      |.................. (0.5, 0.2, -0.5), radius = 0.1m, bottom of sphere has 10cm
+//                         /    \____/      \                                              gap between itself and
+//                        /      ****...........................                           triangle.
+//                       /        **          \                ......... Should be BLACK.
+//         (-1, 0, 0)   /______________________\ (1, 0, 0)
+//
+//
+
+TEST_CASE("Point Light over Sphere over Triangle Casts Shadow on Triangle") {
+    static const auto OPAQUE_RED = Material(RED, AVERAGE_ALBEDO, MaterialType::Diffuse, 0);
+    auto world = World();
+    auto diffuseLighting = DiffuseLighting();
+
+    diffuseLighting.addLight(std::make_unique<PointLight>(PointLight(glm::vec3(0, 1, -0.5), WHITE, 100.0f)));
+
+    const glm::vec3 v0 = glm::vec3(0, 0, -1);
+    const glm::vec3 v1 = glm::vec3(-1, 0, 0);
+    const glm::vec3 v2 = glm::vec3(1, 0, 0);
+    const glm::vec3 normal = glm::vec3(0, 1, 0);
+
+    const auto sphereOrigin = glm::vec3(0.5, 0.2, -0.5);
+
+    const auto sphere = std::make_shared<Sphere>(Sphere(sphereOrigin, 0.1, OPAQUE_RED));
+    const auto triangle = std::make_shared<Triangle>(Triangle(v0, v1, v2, normal, OPAQUE_WHITE));
+
+    world.addGeometry(sphere);
+    world.addGeometry(triangle);
+
+    // Create a ray starting 1cm under the sphere pointing down and into the triangle below,
+    // it should be in the shadow.
+    auto rayOrigin = glm::vec3(sphereOrigin);
+    rayOrigin.y = sphereOrigin.y - 0.01;
+    const auto ray = Ray(rayOrigin, glm::vec3(0, -1, 0));
+    auto triangleIntersectionPoint = glm::vec3(sphereOrigin);
+    triangleIntersectionPoint.y = v0.y;
+    const auto shadowRay = RayCollision(ray, triangleIntersectionPoint, triangle);
+
+    GLubyte r = 255;
+    GLubyte g = 255;
+    GLubyte b = 255;
+
+    diffuseLighting.calculatePixelColor(r, g, b, shadowRay, world);
+
+    REQUIRE(r == 0);
+    REQUIRE(g == 0);
+    REQUIRE(b == 0);
 }
