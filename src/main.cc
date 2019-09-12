@@ -77,12 +77,14 @@ int main() {
     auto world = World();
     //Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
     //Scene::simpleSunTest(world, lightTransportAlgorithm);
-    Scene::sphereCastingShadowOnTriangle(world, lightTransportAlgorithm);
+    glm::mat4 translation;
+    Scene::sphereCastingShadowOnTriangle(world, lightTransportAlgorithm, translation);
 
     spdlog::info("World initialized");
 
     auto rgbImage = RGBImage(1280, 720);
-    auto rayTracer = RayTracer(rgbImage, world, lightTransportAlgorithm);
+    auto rayTracer = RayTracer(rgbImage, world, lightTransportAlgorithm, translation);
+    rayTracer.generateImage();
     spdlog::info("Image RayTraced / initialized");
 
     glBindVertexArray(vao);

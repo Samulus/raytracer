@@ -7,14 +7,20 @@
 #include "spaceconversion.h"
 
 // The ORIGIN is translated, but the direction is untouched
-Ray SpaceConversion::pixelToPrimaryRay(unsigned int x, unsigned int y, unsigned int width, unsigned int height, float fovDegrees, const glm::mat4& translationMatrix) {
+Ray SpaceConversion::pixelToPrimaryRay(unsigned int x,
+                                       unsigned int y,
+                                       unsigned int width,
+                                       unsigned int height,
+                                       float fovDegrees,
+                                       const glm::mat4& translationMatrix) {
+
     auto ray = pixelToPrimaryRay(x, y, width, height, fovDegrees);
-    auto transOrigin = translationMatrix * glm::vec4(ray.origin, 0);
-    auto transDir = translationMatrix * glm::vec4(ray.direction, 1);
-    return Ray(transOrigin, transDir);
+    auto transOrigin = translationMatrix * glm::vec4(ray.origin, 1);
+    return Ray(transOrigin, ray.direction);
 }
 
-Ray SpaceConversion::pixelToPrimaryRay(unsigned int x, unsigned int y, unsigned int width, unsigned int height, float fovDegrees) {
+Ray SpaceConversion::pixelToPrimaryRay(unsigned int x, unsigned int y, unsigned int width, unsigned int height,
+                                       float fovDegrees) {
     auto ndc = rasterToNdc(x, y, width, height);
     auto screen = ndcToScreen(ndc);
     auto camera = screenToCamera(screen, float(width) / float(height), fovDegrees);
@@ -33,7 +39,8 @@ glm::vec2 SpaceConversion::ndcToScreen(const glm::vec2& ndcCoordinates) {
     return glm::vec2(pixelScreenX, pixelScreenY);
 }
 
-glm::vec2 SpaceConversion::screenToCamera(const glm::vec2& screenCoordinates, float imageAspectRatio, float fovDegrees) {
+glm::vec2
+SpaceConversion::screenToCamera(const glm::vec2& screenCoordinates, float imageAspectRatio, float fovDegrees) {
     auto rads = (fovDegrees * PI / 180.0f);
     auto fov = tanf(rads / 2.0f);
     float pixelCameraX = -1 * screenCoordinates.x * imageAspectRatio * fov;

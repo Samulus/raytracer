@@ -31,9 +31,7 @@ float MeshInstance::getIntersectionScalarForRay(const Ray& ray) const {
 glm::vec3 MeshInstance::getSurfaceNormal(const glm::vec3& intersectionPoint) const {
     auto faceNormal = glm::vec3(0);
     wavefrontObj->forEachTriangle([&](const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec3 normal) -> void {
-        //auto pointInfrontOfFace =  Ray(intersectionPoint - (-normal * SURFACE_NORMAL_INTERSECTION_BIAS), normal);
-        auto pointInFrontOfFace = Ray(intersectionPoint, normal);
-       ///float intersectingScalar = wavefrontObj->rayIntersects(pointInfrontOfFace, v0, v1, v2);
+        auto pointInFrontOfFace =  Ray(intersectionPoint + (-normal * SURFACE_NORMAL_INTERSECTION_BIAS), normal);
         float intersectingScalar = wavefrontObj->rayIntersects(pointInFrontOfFace, v0, v1, v2);
         if (intersectingScalar > 0) {
             faceNormal = normal;

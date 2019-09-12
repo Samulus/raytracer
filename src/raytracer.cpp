@@ -18,19 +18,30 @@ RayTracer::RayTracer(
         RGBImage& rgbImage, 
         const World& world, 
         const LightTransport& lightTransport) :
-        rgbImage(rgbImage), world(world), lightTransport(lightTransport) {
-    generateImage();
+            rgbImage(rgbImage),
+            world(world),
+            lightTransport(lightTransport),
+            translation(glm::mat4(1)) {
+}
+
+RayTracer::RayTracer(
+        RGBImage& rgbImage,
+        const World& world,
+        const LightTransport& lightTransport,
+        const glm::mat4& translation) :
+        rgbImage(rgbImage),
+        world(world),
+        lightTransport(lightTransport),
+        translation(translation) {
 }
 
 void RayTracer::generateImage() {
     const auto maxWidth = rgbImage.getXRes();
     const auto maxHeight = rgbImage.getYRes();
 
-    //const auto eyeTranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(0, Universe::HumanEyeLevel, 1));
-
     rgbImage.forEachPixel(
             [&](GLubyte& r, GLubyte& g, GLubyte& b, unsigned int x, unsigned int y) -> void {
-                auto primaryRay = SpaceConversion::pixelToPrimaryRay(x, y, maxWidth, maxHeight, 45);
+                auto primaryRay = SpaceConversion::pixelToPrimaryRay(x, y, maxWidth, maxHeight, 50, translation);
                 auto primaryRayCollision = findNearestRayCollision(primaryRay);
 
                 if (primaryRayCollision.hitObject == std::nullopt) {
@@ -90,3 +101,4 @@ RayTracer::generateSkyPixel(GLubyte& r, GLubyte& g, GLubyte& b, const unsigned i
     g = skyColor.g * 255;
     b = skyColor.b * 255;
 }
+

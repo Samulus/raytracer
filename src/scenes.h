@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <glm/ext/quaternion_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "world.h"
 #include "diffuselighting.h"
 #include "color.h"
@@ -74,7 +76,7 @@ namespace Scene {
     // Shadow Tests
     //
 
-    void sphereCastingShadowOnTriangle(World& world, DiffuseLighting& diffuseLighting) {
+    void sphereCastingShadowOnTriangle(World& world, DiffuseLighting& diffuseLighting, glm::mat4& translation) {
         //diffuseLighting.addLight(std::make_unique<SunLight>(SunLight(glm::vec3(0, -1, 0), WHITE, 25.0f)));
 
         diffuseLighting.addLight(std::make_unique<PointLight>(PointLight(glm::vec3(0, 1, -0.5), WHITE, 500.0f)));
@@ -106,6 +108,9 @@ namespace Scene {
         //world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(0, 0.1, -0.5), 0.05, OPAQUE_RED)));
         //world.addGeometry(std::make_shared<Sphere>(Sphere(glm::vec3(0, -0.2, -0.5), 0.1, OPAQUE_WHITE)));
         world.addGeometry(std::make_shared<Triangle>(Triangle(v0, v1, v2, normal, OPAQUE_WHITE)));
+
+        translation = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1));
+        translation = glm::rotate(translation, glm::radians(90.0f), glm::vec3(0, 1, 0));
     }
 
 
