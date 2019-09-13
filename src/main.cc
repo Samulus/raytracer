@@ -12,8 +12,10 @@
 #include "glfwmanager.h"
 #include "diffuselighting.h"
 #include "scenes.h"
+#include "gui.h"
 #include <GLFW/glfw3.h>
 #include <spdlog/spdlog.h>
+#include <imgui_impl_opengl3.h>
 
 const char *RAYCASTER_FRAGMENT_SHADER =
 #include "raycaster.frag"
@@ -73,6 +75,20 @@ int main() {
     glfwSetFramebufferSizeCallback(window.getWindowPointer(), GLFWManager::onFrameBufferResize);
     spdlog::info("Framebuffer Resize  Callback initialized");
 
+    //
+    // Setup IMGUI
+    //
+
+    //const auto gui = Gui(window.getWindowPointer());
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window.getWindowPointer(), true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+
+
     auto lightTransportAlgorithm = DiffuseLighting();
     auto world = World();
     //Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
@@ -100,11 +116,24 @@ int main() {
 
     spdlog::info("Starting Render Loop");
     while (!window.shouldClose()) {
-        glfwPollEvents();
         window.clear();
+        glfwPollEvents();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        bool t = true;
+        ImGui::ShowDemoWindow(&t);
+
         // 6 indices for our rectangle
+        ImGui::Render();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         window.swapBuffers();
+
+
+        ImGui::EndFrame();
+
     }
 
     spdlog::info("Close requested, goodbye!");

@@ -11,8 +11,14 @@ find_package(OpenGL REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+
 
 add_executable(raytracer_release
+        # lib
+        lib/imgui/imgui_impl_glfw.cpp
+        lib/imgui/imgui_impl_opengl3.cpp
+        # src
         src/main.cc
         src/window.cpp
         src/window.h
@@ -57,7 +63,12 @@ add_executable(raytracer_release
         src/meshinstance.cpp
         src/meshinstance.h
         src/mollertrumbore.h
-        src/mollertrumbore.cpp src/triangle.cpp src/triangle.h)
+        src/mollertrumbore.cpp
+        src/triangle.cpp
+        src/triangle.h src/gui.cpp src/gui.h)
+
+
+target_include_directories(raytracer_release PRIVATE lib/imgui/)
 
 target_link_libraries(raytracer_release PRIVATE glfw)
 target_link_libraries(raytracer_release PRIVATE GLEW::GLEW)
@@ -65,6 +76,8 @@ target_link_libraries(raytracer_release PRIVATE ${OPENGL_LIBRARIES})
 target_link_libraries(raytracer_release PRIVATE glm)
 target_link_libraries(raytracer_release PRIVATE spdlog::spdlog)
 target_link_libraries(raytracer_release PRIVATE tinyobjloader::tinyobjloader)
+target_link_libraries(raytracer_release PRIVATE imgui::imgui)
+
 
 
 # Tests
