@@ -11,6 +11,7 @@ find_package(OpenGL REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
+find_package(Lua REQUIRED)
 
 add_executable(raytracer_release
         # lib
@@ -64,12 +65,30 @@ add_executable(raytracer_release
         src/mollertrumbore.h
         src/mollertrumbore.cpp
         src/triangle.cpp
-        src/triangle.h src/gui.cpp src/gui.h src/worldmap.cpp src/worldmap.h src/procedualvertexbuffer.cpp src/procedualvertexbuffer.h)
+        src/triangle.h
+        src/gui.cpp
+        src/gui.h
+        src/worldmap.cpp
+        src/worldmap.h
+        src/procedualvertexbuffer.cpp
+        src/procedualvertexbuffer.h
+        src/luabinding.cpp
+        src/luabinding.h)
 
 
 target_include_directories(raytracer_release PRIVATE lib/imgui/)
 target_include_directories(raytracer_release PRIVATE lib/linalg/)
+target_include_directories(raytracer_release PRIVATE lib/)
+target_include_directories(raytracer_release PRIVATE ${LUA_INCLUDE_DIR})
 
+# Debugging: Print all CMake Variables
+#get_cmake_property(_variableNames VARIABLES)
+#list (SORT _variableNames)
+#foreach (_variableName ${_variableNames})
+    #message(STATUS "${_variableName}=${${_variableName}}")
+#endforeach()
+
+target_link_libraries(raytracer_release PRIVATE lua)
 target_link_libraries(raytracer_release PRIVATE glfw)
 target_link_libraries(raytracer_release PRIVATE GLEW::GLEW)
 target_link_libraries(raytracer_release PRIVATE ${OPENGL_LIBRARIES})
