@@ -65,7 +65,7 @@ add_executable(raytracer_release
         src/mollertrumbore.h
         src/mollertrumbore.cpp
         src/triangle.cpp
-        src/triangle.h src/gui.cpp src/gui.h)
+        src/triangle.h src/gui.cpp src/gui.h src/worldmap.cpp src/worldmap.h src/procedualvertexbuffer.cpp src/procedualvertexbuffer.h)
 
 
 target_include_directories(raytracer_release PRIVATE lib/imgui/)
