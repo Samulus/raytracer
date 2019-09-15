@@ -17,8 +17,8 @@ TEST_CASE("Sphere behind another sphere is NOT reported as the nearest sphere.")
     auto world = World();
     const auto OPAQUE_WHITE = Material(WHITE, AVERAGE_ALBEDO, MaterialType::Diffuse, 0);
 
-    const auto closestSphere = std::make_shared<Sphere>(Sphere(glm::vec3(0, 0, -1), 1, OPAQUE_WHITE));
-    const auto furtherSphere = std::make_shared<Sphere>(Sphere(glm::vec3(0, 0, -1.1), 1, OPAQUE_WHITE));
+    const auto closestSphere = std::make_shared<Sphere>(Sphere(linalg::vec<float,3>(0, 0, -1), 1, OPAQUE_WHITE));
+    const auto furtherSphere = std::make_shared<Sphere>(Sphere(linalg::vec<float,3>(0, 0, -1.1), 1, OPAQUE_WHITE));
 
     world.addGeometry(closestSphere);
     world.addGeometry(furtherSphere);
@@ -27,8 +27,8 @@ TEST_CASE("Sphere behind another sphere is NOT reported as the nearest sphere.")
     auto image = RGBImage(0,0);
     auto rayTracer = RayTracer(image, world, lightTransportAlgorithm);
 
-    const auto eyePosition = glm::vec3();
-    const auto eyeToFurtherSphere = glm::vec3(0, 0, -1.1) - eyePosition;
+    const auto eyePosition = linalg::vec<float,3>();
+    const auto eyeToFurtherSphere = linalg::vec<float,3>(0, 0, -1.1) - eyePosition;
 
     const auto rayLookingAtFurtherSphere = Ray(eyePosition, eyeToFurtherSphere);
     const auto rayCollision = rayTracer.findNearestRayCollision(rayLookingAtFurtherSphere);

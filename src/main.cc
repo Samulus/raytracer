@@ -93,8 +93,8 @@ int main() {
     auto world = World();
     //Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
     //Scene::simpleSunTest(world, lightTransportAlgorithm);
-    glm::mat4 translation;
-    Scene::sphereCastingShadowOnTriangle(world, lightTransportAlgorithm, translation);
+    auto translation = linalg::mat<float, 4,4>(1);
+    Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
 
     spdlog::info("World initialized");
 

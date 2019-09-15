@@ -6,17 +6,16 @@
 
 #include "sphere.h"
 #include "ray.h"
-#include <glm/gtx/string_cast.hpp>
 
-Sphere::Sphere(glm::vec3 origin, float radius, Material material) :
+Sphere::Sphere(linalg::vec<float,3> origin, float radius, Material material) :
 Geometry(origin, material), radius(radius) {
 }
 
 float Sphere::getIntersectionScalarForRay(const Ray& ray) const {
     auto oc = ray.origin - Geometry::origin;
-    float a = glm::dot(ray.direction, ray.direction);
-    float b = 2.0f * glm::dot(oc, ray.direction);
-    float c = glm::dot(oc,oc) - radius * radius;
+    float a = linalg::dot(ray.direction, ray.direction);
+    float b = 2.0f * linalg::dot(oc, ray.direction);
+    float c = linalg::dot(oc,oc) - radius * radius;
     float discriminant = b*b - 4*a*c;
     if (discriminant < 0.0){
         return -1.0;
@@ -35,8 +34,8 @@ float Sphere::getIntersectionScalarForRay(const Ray& ray) const {
     return -1.0f;
 }
 
-glm::vec3 Sphere::getSurfaceNormal(const glm::vec3& intersectionPoint) const {
-    return glm::normalize(intersectionPoint - Geometry::origin);
+linalg::vec<float,3> Sphere::getSurfaceNormal(const linalg::vec<float,3>& intersectionPoint) const {
+    return linalg::normalize(intersectionPoint - Geometry::origin);
 }
 
 std::ostream& operator<<(std::ostream& os, const Sphere& sphere) {

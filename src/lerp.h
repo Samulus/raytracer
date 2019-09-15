@@ -5,6 +5,6 @@
 //
 
 #pragma once
-#include <glm/vec3.hpp>
+#include <linalg.h>
 
-glm::vec3 lerp(glm::vec3 x, glm::vec3 y, float t);
+linalg::vec<float,3> lerp(linalg::vec<float,3> x, linalg::vec<float,3> y, float t);

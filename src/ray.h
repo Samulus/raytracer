@@ -5,16 +5,16 @@
 //
 
 #pragma once
-#include <glm/glm.hpp>
+#include <linalg.h>
 
 class Ray {
 public:
-    glm::vec3 origin;
-    glm::vec3 direction;
+    linalg::vec<float,3> origin;
+    linalg::vec<float,3> direction;
     ~Ray();
     unsigned int depth;
-    Ray(const glm::vec3& origin, const glm::vec3& direction, unsigned int depth);
-    Ray(const glm::vec3& origin, const glm::vec3& direction);
+    Ray(const linalg::vec<float,3>& origin, const linalg::vec<float,3>& direction, unsigned int depth);
+    Ray(const linalg::vec<float,3>& origin, const linalg::vec<float,3>& direction);
     Ray& operator=(const Ray& other);
-    [[nodiscard]] glm::vec3 pointWithScalar(float t) const;
+    [[nodiscard]] linalg::vec<float,3> pointWithScalar(float t) const;
 };

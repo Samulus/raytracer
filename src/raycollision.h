@@ -12,15 +12,15 @@
 
 struct RayCollision {
     Ray ray;
-    glm::vec3 intersectionPoint;
+    linalg::vec<float,3> intersectionPoint;
     std::optional<std::shared_ptr<Geometry>> hitObject;
     bool isReflectedRay = false;
 
-    RayCollision(const Ray& ray, const glm::vec3& intersectionPoint) :
+    RayCollision(const Ray& ray, const linalg::vec<float,3>& intersectionPoint) :
             ray(ray), intersectionPoint(intersectionPoint), hitObject(std::nullopt) {
     }
 
-    RayCollision(const Ray& ray, const glm::vec3& intersectionPoint, const std::shared_ptr<Geometry>& hitObject) :
+    RayCollision(const Ray& ray, const linalg::vec<float,3>& intersectionPoint, const std::shared_ptr<Geometry>& hitObject) :
         ray(ray), intersectionPoint(intersectionPoint), hitObject(std::optional<std::shared_ptr<Geometry>>(hitObject)) {
     }
 
@@ -32,7 +32,7 @@ struct RayCollision {
         return *this;
     }
 
-    glm::vec3 getSurfaceNormal() const {
+    linalg::vec<float,3> getSurfaceNormal() const {
         if (hitObject == std::nullopt) {
             throw std::runtime_error("No geometry found!");
         }

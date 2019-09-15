@@ -16,7 +16,7 @@ private:
     RGBImage& rgbImage;
     const World& world;
     const LightTransport& lightTransport;
-    const glm::mat4 translation;
+    const linalg::mat<float, 4,4> translation;
 public:
     RayTracer(RGBImage& rgbImage,
               const World& world,
@@ -25,7 +25,7 @@ public:
     RayTracer(RGBImage& rgbImage,
               const World& world,
               const LightTransport& lightTransport,
-              const glm::mat4& translation);
+              const linalg::mat<float,4,4>& translation);
 
     void generateImage();
     RayCollision findNearestRayCollision(const Ray& ray);

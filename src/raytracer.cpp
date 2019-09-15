@@ -8,10 +8,10 @@
 #include "lerp.h"
 #include "spaceconversion.h"
 
-static constexpr glm::vec3 SKY_LIGHT_COLOR = glm::vec3{0.6901, 0.62745, 0.88};
-static constexpr glm::vec3 SKY_DARK_COLOR = glm::vec3{0.89411, 0.69019, 0.75};
-//static constexpr glm::vec3 SKY_LIGHT_COLOR = glm::vec3{0.8, 0.8, 0.8};
-//static constexpr glm::vec3 SKY_DARK_COLOR = glm::vec3{0, 0.19607, 0.298039};
+static constexpr linalg::vec<float,3> SKY_LIGHT_COLOR = linalg::vec<float,3>{0.6901, 0.62745, 0.88};
+static constexpr linalg::vec<float,3> SKY_DARK_COLOR = linalg::vec<float,3>{0.89411, 0.69019, 0.75};
+//static constexpr linalg::vec<float,3> SKY_LIGHT_COLOR = linalg::vec<float,3>{0.8, 0.8, 0.8};
+//static constexpr linalg::vec<float,3> SKY_DARK_COLOR = linalg::vec<float,3>{0, 0.19607, 0.298039};
 static int MAXIMUM_REFLECTION_RECURSION = 5;
 
 RayTracer::RayTracer(
@@ -21,14 +21,14 @@ RayTracer::RayTracer(
             rgbImage(rgbImage),
             world(world),
             lightTransport(lightTransport),
-            translation(glm::mat4(1)) {
+            translation(linalg::identity) {
 }
 
 RayTracer::RayTracer(
         RGBImage& rgbImage,
         const World& world,
         const LightTransport& lightTransport,
-        const glm::mat4& translation) :
+        const linalg::mat<float, 4,4>& translation) :
         rgbImage(rgbImage),
         world(world),
         lightTransport(lightTransport),
@@ -41,7 +41,8 @@ void RayTracer::generateImage() {
 
     rgbImage.forEachPixel(
             [&](GLubyte& r, GLubyte& g, GLubyte& b, unsigned int x, unsigned int y) -> void {
-                auto primaryRay = SpaceConversion::pixelToPrimaryRay(x, y, maxWidth, maxHeight, 50, translation);
+                // TODO: Do NOT ignore the `translation` argument
+                auto primaryRay = SpaceConversion::pixelToPrimaryRay(x, y, maxWidth, maxHeight, 50);
                 auto primaryRayCollision = findNearestRayCollision(primaryRay);
 
                 if (primaryRayCollision.hitObject == std::nullopt) {
@@ -97,8 +98,8 @@ void
 RayTracer::generateSkyPixel(GLubyte& r, GLubyte& g, GLubyte& b, const unsigned int& y, const unsigned int& maxHeight) {
     const float blendAmount = (float(y) / float(maxHeight));
     auto skyColor = lerp(SKY_LIGHT_COLOR, SKY_DARK_COLOR, blendAmount);
-    r = skyColor.r * 255;
-    g = skyColor.g * 255;
-    b = skyColor.b * 255;
+    r = skyColor.x * 255;
+    g = skyColor.y * 255;
+    b = skyColor.z * 255;
 }
 

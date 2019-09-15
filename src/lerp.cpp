@@ -5,6 +5,6 @@
 //
 
 #include "lerp.h"
-glm::vec3 lerp(glm::vec3 x, glm::vec3 y, float t) {
+linalg::vec<float,3> lerp(linalg::vec<float,3> x, linalg::vec<float,3> y, float t) {
     return x * (1.f - t) + y * t;
 }

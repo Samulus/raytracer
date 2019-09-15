@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "linalg.h"
 #include "lighttransport.h"
 #include "light.h"
 #include <memory>
@@ -22,7 +23,7 @@ public:
             const Ray& occlusionRay,
             const World& world,
             float maxScalarDistance) const;
-    glm::vec3 calculateLightContribution(const Light* light, const glm::vec3& intersectionPoint, const Geometry* hitObject) const;
+    linalg::vec<float,3> calculateLightContribution(const Light* light, const linalg::vec<float,3>& intersectionPoint, const Geometry* hitObject) const;
 private:
     void calculateDiffuseColor(GLubyte& r, GLubyte& g, GLubyte& b, const RayCollision& rayCollision, const World& world) const;
 };

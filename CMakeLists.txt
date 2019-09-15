@@ -8,14 +8,13 @@ project(raytracer VERSION 0.0.0
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-
 add_executable(raytracer_release
         # lib
+        lib/linalg/linalg.h
         lib/imgui/imgui_impl_glfw.cpp
         lib/imgui/imgui_impl_opengl3.cpp
         # src
@@ -69,11 +68,11 @@ add_executable(raytracer_release
 
 
 target_include_directories(raytracer_release PRIVATE lib/imgui/)
+target_include_directories(raytracer_release PRIVATE lib/linalg/)
 
 target_link_libraries(raytracer_release PRIVATE glfw)
 target_link_libraries(raytracer_release PRIVATE GLEW::GLEW)
 target_link_libraries(raytracer_release PRIVATE ${OPENGL_LIBRARIES})
-target_link_libraries(raytracer_release PRIVATE glm)
 target_link_libraries(raytracer_release PRIVATE spdlog::spdlog)
 target_link_libraries(raytracer_release PRIVATE tinyobjloader::tinyobjloader)
 target_link_libraries(raytracer_release PRIVATE imgui::imgui)
@@ -83,6 +82,8 @@ target_link_libraries(raytracer_release PRIVATE imgui::imgui)
 # Tests
 find_package(doctest CONFIG REQUIRED)
 add_executable(raytracer_test
+        # lib
+        lib/linalg/linalg.h
         # Test Cases
         test/test.cpp
         test/testrgbimage.cpp
@@ -127,10 +128,11 @@ add_executable(raytracer_test
         src/triangle.h)
 
 target_include_directories(raytracer_test PRIVATE src)
+target_include_directories(raytracer_test PRIVATE lib/linalg/)
+
 target_link_libraries(raytracer_test PRIVATE doctest::doctest)
 target_link_libraries(raytracer_test PRIVATE glfw)
 target_link_libraries(raytracer_test PRIVATE GLEW::GLEW)
-target_link_libraries(raytracer_test PRIVATE glm)
 target_link_libraries(raytracer_test PRIVATE spdlog::spdlog)
 target_link_libraries(raytracer_test PRIVATE fmt::fmt fmt::fmt-header-only)
 target_link_libraries(raytracer_test PRIVATE tinyobjloader::tinyobjloader)

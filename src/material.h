@@ -5,7 +5,6 @@
 //
 
 #pragma once
-#include <glm/glm.hpp>
 #include "albedo.h"
 #include "color.h"
 
@@ -15,12 +14,12 @@ enum MaterialType {
 };
 
 struct Material {
-    const glm::vec3 color;
-    const glm::vec3 albedo;
+    const linalg::vec<float,3> color;
+    const linalg::vec<float,3> albedo;
     // TODO: This is unused
     const float reflectiveness;
     const MaterialType materialType;
-    Material(glm::vec3 color, glm::vec3 albedo, MaterialType materialType, float reflectiveness) :
+    Material(linalg::vec<float,3> color, linalg::vec<float,3> albedo, MaterialType materialType, float reflectiveness) :
         color(color), albedo(albedo), materialType(materialType), reflectiveness(reflectiveness) {
     }
 };

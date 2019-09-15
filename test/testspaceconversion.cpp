@@ -31,7 +31,7 @@ TEST_CASE("Verify primary rays are correct") {
 }
 
 TEST_CASE("Primary ray translated to eye origin is correct") {
-    const auto eyeTranslationMatrix = glm::translate(glm::mat4(1), Universe::HumanEyeOrigin);
+    const auto eyeTranslationMatrix = linalg::translation_matrix(Universe::HumanEyeOrigin);
     const auto nonTranslatedRay = SpaceConversion::pixelToPrimaryRay(1, 1, 3, 3, 50.0f);
 
     // If looking in the center of the screen

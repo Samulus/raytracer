@@ -8,13 +8,13 @@
 #include "geometry.h"
 
 class Triangle : public Geometry {
-    glm::vec3 v0;
-    glm::vec3 v1;
-    glm::vec3 v2;
-    glm::vec3 normal;
+    linalg::vec<float,3> v0;
+    linalg::vec<float,3> v1;
+    linalg::vec<float,3> v2;
+    linalg::vec<float,3> normal;
 public:
-    Triangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& normal, const Material& material);
+    Triangle(const linalg::vec<float,3>& v0, const linalg::vec<float,3>& v1, const linalg::vec<float,3>& v2, const linalg::vec<float,3>& normal, const Material& material);
     ~Triangle() override;
     [[nodiscard]] float getIntersectionScalarForRay(const Ray& ray) const override;
-    [[nodiscard]] glm::vec3 getSurfaceNormal(const glm::vec3& intersectionPoint) const override;
+    [[nodiscard]] linalg::vec<float,3> getSurfaceNormal(const linalg::vec<float,3>& intersectionPoint) const override;
 };

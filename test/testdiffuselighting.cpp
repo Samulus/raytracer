@@ -7,7 +7,7 @@
 #include <doctest/doctest.h>
 #include <diffuselighting.h>
 #include <triangle.h>
-#include <glm/glm.hpp>
+#include <linalg.h>
 #include "albedo.h"
 #include "color.h"
 #include "plane.h"
@@ -15,13 +15,13 @@
 static const auto OPAQUE_WHITE = Material(WHITE, AVERAGE_ALBEDO, MaterialType::Diffuse, 0); // NOLINT(cert-err58-cpp)
 
 TEST_CASE("Ray casted from point on plane directly below sphere results in a collision") {
-    const auto sphereOrigin = glm::vec3(0, 2, -4);
+    const auto sphereOrigin = linalg::vec<float,3>(0, 2, -4);
     const auto sphereRadius = 0.1;
     const auto sphereMaterial = OPAQUE_WHITE;
-    const auto planeOrigin = glm::vec3(0, 0, 0);
-    const auto planeNormal = glm::vec3(0, 1, 0);
+    const auto planeOrigin = linalg::vec<float,3>(0, 0, 0);
+    const auto planeNormal = linalg::vec<float,3>(0, 1, 0);
     const auto planeMaterial = OPAQUE_WHITE;
-    const auto sunDirection = glm::vec3(0, -1, 0);
+    const auto sunDirection = linalg::vec<float,3>(0, -1, 0);
     const auto sunIntensity = 20.0f;
     const auto sunColor = WHITE;
 
@@ -51,11 +51,11 @@ TEST_CASE("Ray casted from point on plane directly below sphere results in a col
 }
 
 TEST_CASE("Sole plane is illuminated by extremely bright light") {
-    const auto planeOrigin = glm::vec3(0, 0, 0);
-    const auto planeNormal = glm::vec3(0, 1, 0);
+    const auto planeOrigin = linalg::vec<float,3>(0, 0, 0);
+    const auto planeNormal = linalg::vec<float,3>(0, 1, 0);
     const auto planeMaterial = OPAQUE_WHITE;
-    const auto sunPosition = glm::vec3(0, Universe::MaximumViewDistance - 1, -3);
-    const auto sunDirection = glm::vec3(0, -1, 0);
+    const auto sunPosition = linalg::vec<float,3>(0, Universe::MaximumViewDistance - 1, -3);
+    const auto sunDirection = linalg::vec<float,3>(0, -1, 0);
     const auto sunIntensity = 1000.0f;
     const auto sunColor = WHITE;
 
@@ -72,9 +72,9 @@ TEST_CASE("Sole plane is illuminated by extremely bright light") {
     GLubyte b = 0;
 
     // Simulate a ray in front of us is illuminating  the floor
-    const auto eyePlaneIntersectionPoint = glm::vec3(0, 0, -3);
+    const auto eyePlaneIntersectionPoint = linalg::vec<float,3>(0, 0, -3);
     const auto eyeDirection = eyePlaneIntersectionPoint - Universe::HumanEyeOrigin;
-    const auto eyeToPointOnPlane = Ray(Universe::HumanEyeOrigin, glm::normalize(eyeDirection));
+    const auto eyeToPointOnPlane = Ray(Universe::HumanEyeOrigin, linalg::normalize(eyeDirection));
     const auto sunRayCollision = RayCollision(eyeToPointOnPlane, eyePlaneIntersectionPoint, plane);
 
     diffuseLighting.calculatePixelColor(r, g, b, sunRayCollision, world);
@@ -105,14 +105,14 @@ TEST_CASE("Point Light over Sphere over Triangle Casts Shadow on Triangle") {
     auto world = World();
     auto diffuseLighting = DiffuseLighting();
 
-    diffuseLighting.addLight(std::make_unique<PointLight>(PointLight(glm::vec3(0, 1, -0.5), WHITE, 100.0f)));
+    diffuseLighting.addLight(std::make_unique<PointLight>(PointLight(linalg::vec<float,3>(0, 1, -0.5), WHITE, 100.0f)));
 
-    const glm::vec3 v0 = glm::vec3(0, 0, -1);
-    const glm::vec3 v1 = glm::vec3(-1, 0, 0);
-    const glm::vec3 v2 = glm::vec3(1, 0, 0);
-    const glm::vec3 normal = glm::vec3(0, 1, 0);
+    const linalg::vec<float,3> v0 = linalg::vec<float,3>(0, 0, -1);
+    const linalg::vec<float,3> v1 = linalg::vec<float,3>(-1, 0, 0);
+    const linalg::vec<float,3> v2 = linalg::vec<float,3>(1, 0, 0);
+    const linalg::vec<float,3> normal = linalg::vec<float,3>(0, 1, 0);
 
-    const auto sphereOrigin = glm::vec3(0.5, 0.2, -0.5);
+    const auto sphereOrigin = linalg::vec<float,3>(0.5, 0.2, -0.5);
 
     const auto sphere = std::make_shared<Sphere>(Sphere(sphereOrigin, 0.1, OPAQUE_RED));
     const auto triangle = std::make_shared<Triangle>(Triangle(v0, v1, v2, normal, OPAQUE_WHITE));
@@ -122,10 +122,10 @@ TEST_CASE("Point Light over Sphere over Triangle Casts Shadow on Triangle") {
 
     // Create a ray starting 1cm under the sphere pointing down and into the triangle below,
     // it should be in the shadow.
-    auto rayOrigin = glm::vec3(sphereOrigin);
+    auto rayOrigin = linalg::vec<float,3>(sphereOrigin);
     rayOrigin.y = sphereOrigin.y - 0.01;
-    const auto ray = Ray(rayOrigin, glm::vec3(0, -1, 0));
-    auto triangleIntersectionPoint = glm::vec3(sphereOrigin);
+    const auto ray = Ray(rayOrigin, linalg::vec<float,3>(0, -1, 0));
+    auto triangleIntersectionPoint = linalg::vec<float,3>(sphereOrigin);
     triangleIntersectionPoint.y = v0.y;
     const auto shadowRay = RayCollision(ray, triangleIntersectionPoint, triangle);
 

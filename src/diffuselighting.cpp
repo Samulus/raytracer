@@ -32,7 +32,7 @@ DiffuseLighting::calculatePixelColor(
 
     if (materialType == MaterialType::Reflective) {
         const auto& surfaceNormal = rayCollision.getSurfaceNormal();
-        const auto& reflectedDirection = primaryRay.direction - 2.0f * glm::dot(primaryRay.direction, surfaceNormal) * surfaceNormal;
+        const auto& reflectedDirection = primaryRay.direction - 2.0f * linalg::dot(primaryRay.direction, surfaceNormal) * surfaceNormal;
         const auto& reflectRayOrigin = rayCollision.intersectionPoint + (surfaceNormal * SHADOW_BIAS);
         const auto& newRayDirection = reflectedDirection;
         const auto& reflectionRay = Ray(reflectRayOrigin, reflectedDirection, primaryRay.depth + 1);
@@ -54,7 +54,7 @@ void DiffuseLighting::calculateDiffuseColor(
     const auto& hitObject = rayCollision.hitObject.value();
     const auto& intersectionPoint = rayCollision.intersectionPoint;
     const auto& surfaceNormal = hitObject->getSurfaceNormal(intersectionPoint);
-    auto finalColor = glm::vec3();
+    auto finalColor = linalg::vec<float,3>();
     for (const auto& light : lights) {
         auto inverseLightDirection = light->getInverseLightDirection(intersectionPoint);
         const auto distanceToLight = light->getDistanceFromLightToIntersectionPoint(intersectionPoint);
@@ -69,9 +69,9 @@ void DiffuseLighting::calculateDiffuseColor(
         }
         finalColor += calculateLightContribution(light.get(), intersectionPoint, hitObject.get());
     }
-    r = std::clamp(finalColor.r * 255.0f, 0.0f, 255.0f);
-    g = std::clamp(finalColor.g * 255.0f, 0.0f, 255.0f);
-    b = std::clamp(finalColor.b * 255.0f, 0.0f, 255.0f);
+    r = std::clamp(finalColor.x * 255.0f, 0.0f, 255.0f);
+    g = std::clamp(finalColor.y * 255.0f, 0.0f, 255.0f);
+    b = std::clamp(finalColor.z * 255.0f, 0.0f, 255.0f);
 }
 void DiffuseLighting::addLight(std::unique_ptr<Light> light) {
     lights.emplace_back(std::move(light));
@@ -92,23 +92,23 @@ DiffuseLighting::rayIntersectsAnyGeometry(const Ray& occlusionRay, const World& 
     return std::nullopt;
 }
 
-glm::vec3 DiffuseLighting::calculateLightContribution(
+linalg::vec<float,3> DiffuseLighting::calculateLightContribution(
         const Light* light,
-        const glm::vec3& intersectionPoint,
+        const linalg::vec<float,3>& intersectionPoint,
         const Geometry* hitObject) const {
 
-    auto outputColor = glm::vec3();
+    linalg::vec<float, 3> outputColor;
     auto inverseLightDirection = light->getInverseLightDirection(intersectionPoint);
     auto distanceToLight = light->getDistanceFromLightToIntersectionPoint(intersectionPoint);
     const auto& surfaceNormal = hitObject->getSurfaceNormal(intersectionPoint);
     if (light->isInfinitelyTravellingLight()) {
         outputColor = light->intensity * light->color;
-        inverseLightDirection = glm::normalize(inverseLightDirection);
+        inverseLightDirection = linalg::normalize(inverseLightDirection);
     } else { // Simulate falloff
         outputColor = light->intensity * light->color / (4.0f * PI * distanceToLight);
-        inverseLightDirection = glm::normalize(inverseLightDirection / distanceToLight);
+        inverseLightDirection = linalg::normalize(inverseLightDirection / distanceToLight);
     }
-    const auto lambertCosine = glm::dot(surfaceNormal, inverseLightDirection);
+    const auto lambertCosine = linalg::dot(surfaceNormal, inverseLightDirection);
     outputColor *= hitObject->getMaterial().albedo / PI;
     outputColor *= hitObject->getMaterial().color;
     outputColor *= light->color;

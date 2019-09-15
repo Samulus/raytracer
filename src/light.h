@@ -5,20 +5,20 @@
 //
 
 #pragma once
-#include <glm/glm.hpp>
 #include <optional>
+#include <cassert>
 #include "universe.h"
 
 struct Light {
-    const glm::vec3 color;
+    const linalg::vec<float,3> color;
     const float intensity;
 
-    Light(glm::vec3 color, float intensity) :
+    Light(linalg::vec<float,3> color, float intensity) :
         color(color), intensity(intensity) {
     }
 
-    [[ nodiscard ]] virtual std::optional<glm::vec3> getPosition() const = 0;
-    [[ nodiscard ]] virtual float getDistanceFromLightToIntersectionPoint(glm::vec3 intersectionPoint) const = 0;
+    [[ nodiscard ]] virtual std::optional<linalg::vec<float,3>> getPosition() const = 0;
+    [[ nodiscard ]] virtual float getDistanceFromLightToIntersectionPoint(linalg::vec<float,3> intersectionPoint) const = 0;
 
     /**
      * Get the inverted light direction. This function is intended to be used in lighting calculations,
@@ -31,24 +31,24 @@ struct Light {
      */
 
     virtual bool isInfinitelyTravellingLight() const = 0;
-    [[ nodiscard ]] virtual glm::vec3 getInverseLightDirection(const glm::vec3& intersectionPoint) const = 0;
+    [[ nodiscard ]] virtual linalg::vec<float,3> getInverseLightDirection(const linalg::vec<float,3>& intersectionPoint) const = 0;
 };
 
 struct SunLight : Light {
-    glm::vec3 direction;
-    SunLight(glm::vec3 direction, glm::vec3 color, float intensity) : direction(direction), Light(color, intensity) {
+    linalg::vec<float,3> direction;
+    SunLight(linalg::vec<float,3> direction, linalg::vec<float,3> color, float intensity) : direction(direction), Light(color, intensity) {
     }
 
-    [[ nodiscard ]] std::optional<glm::vec3> getPosition() const override {
+    [[ nodiscard ]] std::optional<linalg::vec<float,3>> getPosition() const override {
         return std::nullopt;
     }
 
-    [[ nodiscard ]] float getDistanceFromLightToIntersectionPoint(glm::vec3 intersectionPoint) const override {
+    [[ nodiscard ]] float getDistanceFromLightToIntersectionPoint(linalg::vec<float,3> intersectionPoint) const override {
         return Universe::MaximumViewDistance + 1.0f;
     }
 
-    [[ nodiscard ]] glm::vec3 getInverseLightDirection(const glm::vec3& intersectionPoint) const override {
-        return -glm::normalize(direction);
+    [[ nodiscard ]] linalg::vec<float,3> getInverseLightDirection(const linalg::vec<float,3>& intersectionPoint) const override {
+        return -linalg::normalize(direction);
     }
 
     [[ nodiscard ]] bool isInfinitelyTravellingLight() const override {
@@ -57,24 +57,24 @@ struct SunLight : Light {
 };
 
 struct PointLight : Light {
-    const glm::vec3 position;
-    PointLight(glm::vec3 position, glm::vec3 color, float intensity) :
+    const linalg::vec<float,3> position;
+    PointLight(linalg::vec<float,3> position, linalg::vec<float,3> color, float intensity) :
             position(position), Light(color, intensity) {
     }
 
-    [[ nodiscard ]] std::optional<glm::vec3> getPosition() const override {
-        return std::optional<glm::vec3>(position);
+    [[ nodiscard ]] std::optional<linalg::vec<float,3>> getPosition() const override {
+        return std::optional<linalg::vec<float,3>>(position);
     }
 
-    [[ nodiscard ]] float getDistanceFromLightToIntersectionPoint(glm::vec3 intersectionPoint) const override {
+    [[ nodiscard ]] float getDistanceFromLightToIntersectionPoint(linalg::vec<float,3> intersectionPoint) const override {
         const auto lightDirection = position - intersectionPoint;
-        const auto distanceFromLightToIntersectionPoint = glm::sqrt(glm::length(lightDirection));
+        const auto distanceFromLightToIntersectionPoint = linalg::sqrt(linalg::length(lightDirection));
         return distanceFromLightToIntersectionPoint;
     }
 
-    [[ nodiscard ]] glm::vec3 getInverseLightDirection(const glm::vec3& intersectionPoint) const override {
+    [[ nodiscard ]] linalg::vec<float,3> getInverseLightDirection(const linalg::vec<float,3>& intersectionPoint) const override {
         auto inverseDirection = position - intersectionPoint;
-        auto dist = glm::sqrt(glm::length(inverseDirection));
+        auto dist = linalg::sqrt(linalg::length(inverseDirection));
         assert(std::abs(dist) > std::numeric_limits<float>::epsilon());
         return inverseDirection / dist;
     }

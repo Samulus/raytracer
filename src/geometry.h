@@ -12,12 +12,12 @@
 class Geometry {
 protected:
     Material material;
-    glm::vec3 origin;
+    linalg::vec<float,3> origin;
 public:
-    Geometry(const glm::vec3& origin, const Material& material) : origin(origin), material(material) {};
+    Geometry(const linalg::vec<float,3>& origin, const Material& material) : origin(origin), material(material) {};
     virtual ~Geometry() = 0;
     [[nodiscard]] virtual float getIntersectionScalarForRay(const Ray& ray) const = 0;
     [[nodiscard]] Material getMaterial() const { return material; }
-    [[nodiscard]] virtual glm::vec3 getSurfaceNormal(const glm::vec3& intersectionPoint) const = 0;
+    [[nodiscard]] virtual linalg::vec<float,3> getSurfaceNormal(const linalg::vec<float,3>& intersectionPoint) const = 0;
 };
 

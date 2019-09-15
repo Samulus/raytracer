@@ -5,5 +5,5 @@
 //
 
 #pragma once
-#include <glm/vec3.hpp>
-static constexpr glm::vec3 AVERAGE_ALBEDO = glm::vec3(0.18, 0.18, 0.18);
+#include <linalg.h>
+static constexpr linalg::vec<float,3> AVERAGE_ALBEDO = linalg::vec<float,3>(0.18, 0.18, 0.18);

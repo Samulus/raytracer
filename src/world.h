@@ -5,12 +5,11 @@
 //
 
 #pragma once
-#include <glm/glm.hpp>
 #include <vector>
-#include "sphere.h"
-#include "light.h"
 #include <functional>
 #include <memory>
+#include "sphere.h"
+#include "light.h"
 
 class World {
 private:

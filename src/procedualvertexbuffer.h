@@ -10,9 +10,7 @@
 
 class ProcedualVertexBuffer {
 private:
-    std::vector<GLvoid> buffer;
+    void* buffer;
 public:
     ProcedualVertexBuffer();
-
-    //ProcedualVertexBuffer&& addLine();
 };

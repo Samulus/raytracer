@@ -6,19 +6,16 @@
 
 #include "plane.h"
 #include "ray.h"
-#include <algorithm>
-#include <glm/gtx/string_cast.hpp>
-#include "mollertrumbore.h"
 
-Plane::Plane(glm::vec3 origin, glm::vec3 normal, Material material) : Geometry(origin, material), normal(glm::normalize(normal)) {
+Plane::Plane(linalg::vec<float,3> origin, linalg::vec<float,3> normal, Material material) : Geometry(origin, material), normal(linalg::normalize(normal)) {
 }
 
 Plane::~Plane() {
 }
 
 float Plane::getIntersectionScalarForRay(const Ray &ray) const {
-    float denom = glm::dot(normal, ray.direction);
-    glm::vec3 planeToRayDirection = origin - ray.origin;
+    float denom = linalg::dot(normal, ray.direction);
+    linalg::vec<float,3> planeToRayDirection = origin - ray.origin;
 
     /*
     if (isEyeInFrontOfPlane(ray, origin)) {
@@ -34,7 +31,7 @@ float Plane::getIntersectionScalarForRay(const Ray &ray) const {
     }
 
     if (std::abs(denom) > 1e-2) {
-        auto dot = glm::dot(planeToRayDirection, normal);
+        auto dot = linalg::dot(planeToRayDirection, normal);
         float t = dot / denom;
         if (t >= 1e-4) {
             return t;
@@ -44,7 +41,7 @@ float Plane::getIntersectionScalarForRay(const Ray &ray) const {
     return -1.0f;
 }
 
-glm::vec3 Plane::getSurfaceNormal(const glm::vec3& ignored) const {
+linalg::vec<float,3> Plane::getSurfaceNormal(const linalg::vec<float,3>& ignored) const {
     return normal;
 }
 
