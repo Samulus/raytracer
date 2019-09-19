@@ -13,9 +13,13 @@
 #include "diffuselighting.h"
 #include "scenes.h"
 #include "gui.h"
+#include "arguments.h"
+#include "luabinding.h"
+#include "filebrowserwindow.h"
+
+#include <optional>
 #include <GLFW/glfw3.h>
 #include <spdlog/spdlog.h>
-#include <imgui_impl_opengl3.h>
 
 const char *RAYCASTER_FRAGMENT_SHADER =
 #include "raycaster.frag"
@@ -25,15 +29,39 @@ const char *RAYCASTER_VERTEX_SHADER =
 #include "raycaster.vert"
 ;
 
+const char *DEFAULT_LUA_SCENE =
+#include "defaultscene.lua"
+;
+
 GLuint setupVertexArrayObject();
 Shader setupShader();
 void setupTexture(RGBImage& image);
 
-int main() {
+int main(int ac, char **av) {
+    const auto args = Arguments::handleArguments(ac, av);
+
     if (!glfwInit()) {
         spdlog::critical("Unable to initialize GLFW3!");
         return 1;
+    } else {
+        spdlog::info("Displaying default scene");
     }
+
+    spdlog::info("Initializing world from Lua scene file.");
+
+    auto luaBinding = LuaBinding();
+    auto world = World();
+
+    std::unique_ptr<WorldLightEyeTuple> worldLightEyeTuple = nullptr;
+    if (args.scriptDirectory != std::nullopt) {
+        spdlog::info("scriptDirectory set to: {}", args.scriptDirectory.value().string());
+        worldLightEyeTuple = nullptr; // NOOP for now;
+    } else {
+        spdlog::info("scriptDirectory not specified, using default scene");
+        worldLightEyeTuple = luaBinding.loadWorldFromScript(DEFAULT_LUA_SCENE);
+    }
+
+    spdlog::info("World initialized");
 
     auto window = Window();
     spdlog::info("Window initialized");
@@ -75,31 +103,11 @@ int main() {
     glfwSetFramebufferSizeCallback(window.getWindowPointer(), GLFWManager::onFrameBufferResize);
     spdlog::info("Framebuffer Resize  Callback initialized");
 
-    //
-    // Setup IMGUI
-    //
-
-    //const auto gui = Gui(window.getWindowPointer());
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window.getWindowPointer(), true);
-    ImGui_ImplOpenGL3_Init("#version 330");
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-
-
     auto lightTransportAlgorithm = DiffuseLighting();
-    auto world = World();
-    //Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
-    //Scene::simpleSunTest(world, lightTransportAlgorithm);
-    auto translation = linalg::mat<float, 4,4>(1);
     Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
 
-    spdlog::info("World initialized");
-
     auto rgbImage = RGBImage(1280, 720);
-    auto rayTracer = RayTracer(rgbImage, world, lightTransportAlgorithm, translation);
+    auto rayTracer = RayTracer(rgbImage, world, lightTransportAlgorithm);
     rayTracer.generateImage();
     spdlog::info("Image RayTraced / initialized");
 
@@ -114,26 +122,29 @@ int main() {
     glfwGetFramebufferSize(window.getWindowPointer(), &width, &height);
     onResize(window.getWindowPointer(), width, height);
 
+    // UI
+    auto gui = std::make_shared<Gui>(Gui(window.getWindowPointer()));
+
+    std::optional<FileBrowserWindow> fileBrowserWindow = std::nullopt;
+    if (args.scriptDirectory != std::nullopt) {
+        fileBrowserWindow = FileBrowserWindow(args.scriptDirectory.value(), gui);
+    }
+
     spdlog::info("Starting Render Loop");
     while (!window.shouldClose()) {
         window.clear();
         glfwPollEvents();
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        bool t = true;
-        ImGui::ShowDemoWindow(&t);
+        gui->newFrame();
 
-        // 6 indices for our rectangle
-        ImGui::Render();
+        if (fileBrowserWindow != std::nullopt) {
+            fileBrowserWindow->draw();
+        }
+
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        gui->render();
         window.swapBuffers();
-
-
-        ImGui::EndFrame();
-
+        gui->endFrame();
     }
 
     spdlog::info("Close requested, goodbye!");

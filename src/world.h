@@ -18,5 +18,5 @@ private:
 public:
     explicit World() = default;
     void addGeometry(const std::shared_ptr<Geometry>& geometry);
-    const std::vector<std::shared_ptr<Geometry>>& getGeometry() const;
+    [[ nodiscard ]] const std::vector<std::shared_ptr<Geometry>>& getGeometry() const;
 };

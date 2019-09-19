@@ -18,6 +18,9 @@ add_executable(raytracer_release
         lib/linalg/linalg.h
         lib/imgui/imgui_impl_glfw.cpp
         lib/imgui/imgui_impl_opengl3.cpp
+        lib/sol2/sol/sol.hpp
+        lib/tinydir/tinydir.h
+        lib/clipp/clipp.h
         # src
         src/main.cc
         src/window.cpp
@@ -73,19 +76,26 @@ add_executable(raytracer_release
         src/procedualvertexbuffer.cpp
         src/procedualvertexbuffer.h
         src/luabinding.cpp
-        src/luabinding.h)
+        src/luabinding.h
+        src/arguments.cpp
+        src/arguments.h
+        src/version.h
+        src/worldlighteyetuple.h
+        src/worldlighteyetuple.cpp src/filebrowserwindow.cpp src/filebrowserwindow.h)
 
 
-target_include_directories(raytracer_release PRIVATE lib/imgui/)
-target_include_directories(raytracer_release PRIVATE lib/linalg/)
-target_include_directories(raytracer_release PRIVATE lib/)
+target_include_directories(raytracer_release PRIVATE lib/imgui)
+target_include_directories(raytracer_release PRIVATE lib/linalg)
+target_include_directories(raytracer_release PRIVATE lib/sol2)
 target_include_directories(raytracer_release PRIVATE ${LUA_INCLUDE_DIR})
+target_include_directories(raytracer_release PRIVATE lib/tinydir)
+target_include_directories(raytracer_release PRIVATE lib/clipp)
 
 # Debugging: Print all CMake Variables
 #get_cmake_property(_variableNames VARIABLES)
 #list (SORT _variableNames)
 #foreach (_variableName ${_variableNames})
-    #message(STATUS "${_variableName}=${${_variableName}}")
+#    message(STATUS "${_variableName}=${${_variableName}}")
 #endforeach()
 
 target_link_libraries(raytracer_release PRIVATE lua)
@@ -112,7 +122,6 @@ add_executable(raytracer_test
         test/testdiffuselighting.cpp
         test/testplane.cpp
         test/testraytracer.cpp
-        test/testwavefrontobj.cpp
         test/testmollertrumbore.cpp
         # Main Program Code
         src/geometry.cpp

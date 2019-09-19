@@ -3,7 +3,7 @@
 // Copyright (c) 2013-2019 Rapptz, ThePhD and contributors
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
+// this software and associated documentation paths (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
 // the Software, and to permit persons to whom the Software is furnished to do so,
@@ -3128,7 +3128,7 @@ if (fopen_s(&lf.f, filename, "r") != 0)
 return compat53_errfile(L, "open", fnameindex);
 #endif /* Locking vs. No-locking fopen variants */
 #else
-lf.f = fopen(filename, "r"); /* default stdlib doesn't forcefully lock files here */
+lf.f = fopen(filename, "r"); /* default stdlib doesn't forcefully lock paths here */
 if (lf.f == NULL) return compat53_errfile(L, "open", fnameindex);
 #endif
 }
@@ -3176,7 +3176,7 @@ return luaL_loadbuffer(L, buff, sz, name);
      (defined(__APPLE__) && defined(__MACH__)))
 /* some form of unix; check feature macros in unistd.h for details */
 #  include <unistd.h>
-/* check posix version; the relevant include files and macros probably
+/* check posix version; the relevant include paths and macros probably
 * were available before 2001, but I'm not sure */
 #  if defined(_POSIX_VERSION) && _POSIX_VERSION >= 200112L
 #    include <sys/wait.h>

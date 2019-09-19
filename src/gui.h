@@ -6,11 +6,16 @@
 
 #pragma once
 #include <GLFW/glfw3.h>
-
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
+#include <imgui.h>
+#include <vector>
+#include <string>
 
 class Gui {
+private:
+    ImGuiIO io;
 public:
     explicit Gui(GLFWwindow* window);
+    void newFrame();
+    void render();
+    void endFrame();
 };

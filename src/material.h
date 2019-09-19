@@ -14,14 +14,12 @@ enum MaterialType {
 };
 
 struct Material {
-    const linalg::vec<float,3> color;
-    const linalg::vec<float,3> albedo;
-    // TODO: This is unused
+    const linalg::aliases::float3 color;
+    const linalg::aliases::float3 albedo;
     const float reflectiveness;
     const MaterialType materialType;
-    Material(linalg::vec<float,3> color, linalg::vec<float,3> albedo, MaterialType materialType, float reflectiveness) :
+    Material(linalg::aliases::float3 color, linalg::aliases::float3 albedo, MaterialType materialType, float reflectiveness) :
         color(color), albedo(albedo), materialType(materialType), reflectiveness(reflectiveness) {
     }
 };
 
-static const auto OPAQUE_DIFFUSE_RED = Material(RED, AVERAGE_ALBEDO, MaterialType::Diffuse, 0);
