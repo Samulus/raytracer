@@ -8,18 +8,15 @@
 
 #include "lua.hpp"
 
-#define SOL_ALL_SAFETIES_ON 1
-#define SOL_CHECK_ARGUMENTS 1
-#define SOL_SAFE_USERTYPES 1
-#include "sol/sol.hpp"
-#include "sol/forward.hpp"
+
+#include <sol/sol.hpp>
 #include "world.h"
-#include "worldlighteyetuple.h"
+#include "universedata.h"
 
 class LuaBinding {
     sol::state global;
 public:
     LuaBinding();
-    std::unique_ptr<WorldLightEyeTuple> loadWorldFromScript(const char* luaSource);
+    UniverseData loadUniverseFromScript(const std::filesystem::path& luaFile);
 };
 

@@ -10,6 +10,8 @@ RGBImage::RGBImage(unsigned int xRes, unsigned int yRes) : xRes(xRes), yRes(yRes
     byteData = std::vector<GLubyte>(xRes * yRes * 3, 0);
 }
 
+RGBImage::~RGBImage() = default;
+
 const std::vector<GLubyte>& RGBImage::getRGBData() {
     return byteData;
 }

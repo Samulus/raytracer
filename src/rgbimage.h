@@ -23,6 +23,7 @@ private:
     std::vector<GLubyte> byteData;
 public:
     RGBImage(unsigned int xRes, unsigned int yRes);
+    ~RGBImage();
     const std::vector<GLubyte>& getRGBData();
     const GLvoid* getRGBDataPointer();
     unsigned int getXRes();

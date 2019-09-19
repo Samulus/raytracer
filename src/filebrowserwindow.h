@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <vector>
 #include <string>
+#include <optional>
 
 /**
  * TODO:
@@ -26,7 +27,7 @@ class FileBrowserWindow {
 public:
     explicit FileBrowserWindow(const std::filesystem::path& path, const std::shared_ptr<Gui>& gui);
     ~FileBrowserWindow();
-    void draw();
+    std::optional<std::filesystem::path> draw();
 private:
     void reloadDirectory();
 };

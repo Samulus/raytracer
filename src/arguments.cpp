@@ -5,7 +5,6 @@
 //
 
 #include "clipp.h"
-#include "tinydir.h"
 #include "arguments.h"
 #include "version.h"
 #include <iostream>

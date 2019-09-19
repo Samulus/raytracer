@@ -7,11 +7,8 @@
 #include "window.h"
 #include "shader.h"
 #include "raytracer.h"
-#include "world.h"
 #include "rgbimage.h"
 #include "glfwmanager.h"
-#include "diffuselighting.h"
-#include "scenes.h"
 #include "gui.h"
 #include "arguments.h"
 #include "luabinding.h"
@@ -43,25 +40,9 @@ int main(int ac, char **av) {
     if (!glfwInit()) {
         spdlog::critical("Unable to initialize GLFW3!");
         return 1;
-    } else {
-        spdlog::info("Displaying default scene");
     }
-
-    spdlog::info("Initializing world from Lua scene file.");
 
     auto luaBinding = LuaBinding();
-    auto world = World();
-
-    std::unique_ptr<WorldLightEyeTuple> worldLightEyeTuple = nullptr;
-    if (args.scriptDirectory != std::nullopt) {
-        spdlog::info("scriptDirectory set to: {}", args.scriptDirectory.value().string());
-        worldLightEyeTuple = nullptr; // NOOP for now;
-    } else {
-        spdlog::info("scriptDirectory not specified, using default scene");
-        worldLightEyeTuple = luaBinding.loadWorldFromScript(DEFAULT_LUA_SCENE);
-    }
-
-    spdlog::info("World initialized");
 
     auto window = Window();
     spdlog::info("Window initialized");
@@ -103,21 +84,7 @@ int main(int ac, char **av) {
     glfwSetFramebufferSizeCallback(window.getWindowPointer(), GLFWManager::onFrameBufferResize);
     spdlog::info("Framebuffer Resize  Callback initialized");
 
-    auto lightTransportAlgorithm = DiffuseLighting();
-    Scene::ballsHoveringAboveGlobe(world, lightTransportAlgorithm);
-
-    auto rgbImage = RGBImage(1280, 720);
-    auto rayTracer = RayTracer(rgbImage, world, lightTransportAlgorithm);
-    rayTracer.generateImage();
-    spdlog::info("Image RayTraced / initialized");
-
     glBindVertexArray(vao);
-    setupTexture(rgbImage);
-    spdlog::info("Texture initialized");
-
-    spdlog::info("Setup Viewport");
-
-    // setup the viewport initially
     int width, height;
     glfwGetFramebufferSize(window.getWindowPointer(), &width, &height);
     onResize(window.getWindowPointer(), width, height);
@@ -138,7 +105,14 @@ int main(int ac, char **av) {
         gui->newFrame();
 
         if (fileBrowserWindow != std::nullopt) {
-            fileBrowserWindow->draw();
+            auto selectedPath = fileBrowserWindow->draw();
+            if (selectedPath != std::nullopt) {
+                const auto universeData = luaBinding.loadUniverseFromScript(selectedPath.value());
+                auto rgbImage = RGBImage(1280, 720);
+                auto rayTracer = RayTracer(rgbImage, universeData.world, universeData.lightTransport, universeData.eyeMatrix);
+                rayTracer.generateImage();
+                setupTexture(rgbImage);
+            }
         }
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
@@ -151,11 +125,6 @@ int main(int ac, char **av) {
     glfwTerminate();
     return 0;
 }
-
-/**
- * Setup a VAO for a fullscreen quad
- * (so that we can apply the raytraced image as a texture to the quad)
- */
 
 GLuint setupVertexArrayObject() {
     auto fullScreenQuadData = std::vector<GLfloat> {

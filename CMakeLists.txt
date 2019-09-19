@@ -12,14 +12,13 @@ find_package(tinyobjloader CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(Lua REQUIRED)
+find_package(sol2 CONFIG REQUIRED)
 
 add_executable(raytracer_release
         # lib
         lib/linalg/linalg.h
         lib/imgui/imgui_impl_glfw.cpp
         lib/imgui/imgui_impl_opengl3.cpp
-        lib/sol2/sol/sol.hpp
-        lib/tinydir/tinydir.h
         lib/clipp/clipp.h
         # src
         src/main.cc
@@ -80,16 +79,21 @@ add_executable(raytracer_release
         src/arguments.cpp
         src/arguments.h
         src/version.h
-        src/worldlighteyetuple.h
-        src/worldlighteyetuple.cpp src/filebrowserwindow.cpp src/filebrowserwindow.h)
+        src/universedata.h
+        src/universedata.cpp
+        src/filebrowserwindow.cpp
+        src/filebrowserwindow.h)
 
 
 target_include_directories(raytracer_release PRIVATE lib/imgui)
 target_include_directories(raytracer_release PRIVATE lib/linalg)
-target_include_directories(raytracer_release PRIVATE lib/sol2)
+# TODO: Stupid hack, sol2 directory is wrong
+target_include_directories(raytracer_release PUBLIC ${sol2_DIR}/../../include/sol/)
 target_include_directories(raytracer_release PRIVATE ${LUA_INCLUDE_DIR})
 target_include_directories(raytracer_release PRIVATE lib/tinydir)
 target_include_directories(raytracer_release PRIVATE lib/clipp)
+add_compile_definitions(SOL_ALL_SAFETIES_ON=1)
+
 
 # Debugging: Print all CMake Variables
 #get_cmake_property(_variableNames VARIABLES)
@@ -99,6 +103,7 @@ target_include_directories(raytracer_release PRIVATE lib/clipp)
 #endforeach()
 
 target_link_libraries(raytracer_release PRIVATE lua)
+target_link_libraries(raytracer_release PRIVATE sol2::sol2)
 target_link_libraries(raytracer_release PRIVATE glfw)
 target_link_libraries(raytracer_release PRIVATE GLEW::GLEW)
 target_link_libraries(raytracer_release PRIVATE ${OPENGL_LIBRARIES})
