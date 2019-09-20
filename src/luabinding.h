@@ -16,7 +16,6 @@
 
 
 #include <sol/sol.hpp>
-#include <sol/forward.hpp>
 SOL_BASE_CLASSES(Sphere, Geometry);
 
 #include "world.h"

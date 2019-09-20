@@ -59,16 +59,39 @@ LuaBinding::LuaBinding() : global(sol::state()){
     auto material = global.new_usertype<Material>(
             "Material", sol::constructors<Material(float3, float3, MaterialType, float)>());
 
-    // Light Transport Algorithms
-    auto diffuseLighting = global.new_usertype<DiffuseLighting>(
-            "DiffuseLighting", sol::constructors<DiffuseLighting()>());
 
     // Light Types
-    auto sunLight = global.new_usertype<SunLight>(
-            "SunLight", sol::constructors<SunLight(float3, float3, float)>());
+    auto light = global.new_usertype<Light>("Light");
 
-    auto pointLight = global.new_usertype<SunLight>(
-            "PointLight", sol::constructors<PointLight(float3, float3, float)>());
+    auto sunLight = global.new_usertype<SunLight>("SunLight",
+        sol::constructors<SunLight(float3, float3, float)>(),
+        sol::base_classes, sol::bases<Light>()
+    );
+
+    auto pointLight = global.new_usertype<SunLight>("PointLight",
+        sol::constructors<PointLight(float3, float3, float)>(),
+        sol::base_classes, sol::bases<Light>()
+    );
+
+    // Light Transport Algorithms
+    auto diffuseLighting = global.new_usertype<DiffuseLighting>("DiffuseLighting",
+        sol::constructors<DiffuseLighting()>(),
+        "addLight", [](DiffuseLighting& diffuseLighting, LightTransport& lightTransport) {
+            auto* sunLight = dynamic_cast<SunLight*>(&lightTransport);
+            if (sunLight != nullptr) {
+                std::unique_ptr<Light> tmp = std::make_unique<SunLight>(*sunLight);
+                diffuseLighting.addLight(tmp);
+                return;
+            }
+
+            auto* pointLight = dynamic_cast<PointLight*>(&lightTransport);
+            if (pointLight != nullptr) {
+                std::unique_ptr<Light> tmp = std::make_unique<PointLight>(*pointLight);
+                diffuseLighting.addLight(tmp);
+                return;
+            }
+        }
+    );
 
     // World
     auto world = global.new_usertype<World>(

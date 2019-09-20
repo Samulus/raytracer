@@ -18,7 +18,7 @@ public:
     DiffuseLighting() = default;
     ~DiffuseLighting() override;
     std::optional<RayCollision> calculatePixelColor(GLubyte& r, GLubyte& g, GLubyte& b, const RayCollision& rayCollision, const World& world) const override;
-    void addLight(std::unique_ptr<Light> light);
+    void addLight(std::unique_ptr<Light>& light);
     [[nodiscard]] std::optional<RayCollision> rayIntersectsAnyGeometry(
             const Ray& occlusionRay,
             const World& world,

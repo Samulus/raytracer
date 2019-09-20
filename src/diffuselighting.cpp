@@ -73,7 +73,7 @@ void DiffuseLighting::calculateDiffuseColor(
     g = std::clamp(finalColor.y * 255.0f, 0.0f, 255.0f);
     b = std::clamp(finalColor.z * 255.0f, 0.0f, 255.0f);
 }
-void DiffuseLighting::addLight(std::unique_ptr<Light> light) {
+void DiffuseLighting::addLight(std::unique_ptr<Light>& light) {
     lights.emplace_back(std::move(light));
 }
 

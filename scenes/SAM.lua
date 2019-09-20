@@ -5,6 +5,7 @@
 --
 
 local Albedo = Vec3f.new(0.18, 0.18, 0.18)
+print(Albedo)
 
 local Color = {
     white = Vec3f.new(1, 1, 1),
@@ -34,7 +35,7 @@ for _, geo in ipairs(Geometry) do
 end
 
 for _, light in ipairs(Lighting) do
-    --Universe.lightTransport:addLight(light)
+    Universe.lightTransport:addLight(light)
 end
 
 return WorldLightEyeTuple
