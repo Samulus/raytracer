@@ -11,6 +11,8 @@
 #include "luabinding.h"
 #include "universedata.h"
 #include "sphere.h"
+#include "plane.h"
+#include "triangle.h"
 
 LuaBinding::LuaBinding() : global(sol::state()){
     global.open_libraries(
@@ -70,11 +72,33 @@ LuaBinding::LuaBinding() : global(sol::state()){
 
     // World
     auto world = global.new_usertype<World>(
-            "World", sol::constructors<World()>(),
-            "addGeometry", &World::addGeometry
+        "World", sol::constructors<World()>(),
+        "addGeometry", [] (World& world, Geometry& geometry) {
+            auto* sphere = dynamic_cast<Sphere*>(&geometry);
+            if (sphere != nullptr) {
+                world.addGeometry(std::make_shared<Sphere>(*sphere));
+                return;
+            }
+
+            auto* triangle = dynamic_cast<Triangle*>(&geometry);
+            if (triangle != nullptr) {
+                world.addGeometry(std::make_shared<Triangle>(*triangle));
+                return;
+            }
+
+            auto* plane = dynamic_cast<Plane*>(&geometry);
+            if (plane != nullptr) {
+                world.addGeometry(std::make_shared<Plane>(*plane));
+                return;
+            }
+
+            throw std::runtime_error("Unknown geometry.");
+        }
     );
 
     // Geometry
+    auto geometry = global.new_usertype<Geometry>("Geometry");
+
     auto sphere = global.new_usertype<Sphere>("Sphere",
         sol::constructors<Sphere(float3, float, Material)>(),
         sol::base_classes, sol::bases<Geometry>()
@@ -83,6 +107,7 @@ LuaBinding::LuaBinding() : global(sol::state()){
 
 UniverseData LuaBinding::loadUniverseFromScript(const std::filesystem::path& luaFile) {
     auto result = global.safe_script_file(luaFile);
+
     global.collect_garbage();
 
     if (!result.valid()) {

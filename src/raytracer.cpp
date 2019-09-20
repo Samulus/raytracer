@@ -8,10 +8,10 @@
 #include "lerp.h"
 #include "spaceconversion.h"
 
-static constexpr linalg::vec<float,3> SKY_LIGHT_COLOR = linalg::vec<float,3>{0.6901, 0.62745, 0.88};
-static constexpr linalg::vec<float,3> SKY_DARK_COLOR = linalg::vec<float,3>{0.89411, 0.69019, 0.75};
-//static constexpr linalg::vec<float,3> SKY_LIGHT_COLOR = linalg::vec<float,3>{0.8, 0.8, 0.8};
-//static constexpr linalg::vec<float,3> SKY_DARK_COLOR = linalg::vec<float,3>{0, 0.19607, 0.298039};
+//static constexpr linalg::vec<float,3> SKY_LIGHT_COLOR = linalg::vec<float,3>{0.6901, 0.62745, 0.88};
+//static constexpr linalg::vec<float,3> SKY_DARK_COLOR = linalg::vec<float,3>{0.89411, 0.69019, 0.75};
+static constexpr linalg::vec<float,3> SKY_LIGHT_COLOR = linalg::vec<float,3>{0.8, 0.8, 0.8};
+static constexpr linalg::vec<float,3> SKY_DARK_COLOR = linalg::vec<float,3>{0, 0.19607, 0.298039};
 static int MAXIMUM_REFLECTION_RECURSION = 5;
 
 RayTracer::RayTracer(

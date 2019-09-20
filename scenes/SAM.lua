@@ -34,7 +34,7 @@ for _, geo in ipairs(Geometry) do
 end
 
 for _, light in ipairs(Lighting) do
-    Universe.lightTransport:addLight(light)
+    --Universe.lightTransport:addLight(light)
 end
 
 return WorldLightEyeTuple
