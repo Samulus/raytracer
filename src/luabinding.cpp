@@ -76,15 +76,15 @@ LuaBinding::LuaBinding() : global(sol::state()){
     // Light Transport Algorithms
     auto diffuseLighting = global.new_usertype<DiffuseLighting>("DiffuseLighting",
         sol::constructors<DiffuseLighting()>(),
-        "addLight", [](DiffuseLighting& diffuseLighting, LightTransport& lightTransport) {
-            auto* sunLight = dynamic_cast<SunLight*>(&lightTransport);
+        "addLight", [](DiffuseLighting& diffuseLighting, Light& light) {
+            auto* sunLight = dynamic_cast<SunLight*>(&light);
             if (sunLight != nullptr) {
                 std::unique_ptr<Light> tmp = std::make_unique<SunLight>(*sunLight);
                 diffuseLighting.addLight(tmp);
                 return;
             }
 
-            auto* pointLight = dynamic_cast<PointLight*>(&lightTransport);
+            auto* pointLight = dynamic_cast<PointLight*>(&light);
             if (pointLight != nullptr) {
                 std::unique_ptr<Light> tmp = std::make_unique<PointLight>(*pointLight);
                 diffuseLighting.addLight(tmp);

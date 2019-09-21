@@ -5,7 +5,6 @@
 --
 
 local Albedo = Vec3f.new(0.18, 0.18, 0.18)
-print(Albedo)
 
 local Color = {
     white = Vec3f.new(1, 1, 1),
@@ -23,7 +22,7 @@ local Universe = {
 }
 
 local Geometry = {
-    Sphere.new(Vec3f.new(0, 0.2, 0), 0.1, Color.white)
+    Sphere.new(Vec3f.new(0, 0.2, -2), 0.1, Color.white)
 }
 
 local Lighting = {
