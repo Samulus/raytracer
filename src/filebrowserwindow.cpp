@@ -10,6 +10,8 @@ FileBrowserWindow::FileBrowserWindow(const std::filesystem::path& path, const st
     reloadDirectory();
 }
 
+FileBrowserWindow::~FileBrowserWindow() = default;
+
 std::optional<std::filesystem::path> FileBrowserWindow::draw() {
     ImGui::Begin("Scenes");
     if (ImGui::Button("Scan")) {
@@ -27,8 +29,6 @@ std::optional<std::filesystem::path> FileBrowserWindow::draw() {
     ImGui::End();
     return std::nullopt;
 }
-
-FileBrowserWindow::~FileBrowserWindow() = default;
 
 void FileBrowserWindow::reloadDirectory() {
     paths.clear();

@@ -23,7 +23,13 @@ GLint Shader::getProgramID() const {
     return mID;
 }
 
-bool Shader::rememberUniformLocation(const std::string& uniformName) {
+/**
+ * Lookup a uniform variable and store its uniform location
+ * internally.
+ * @param uniformName
+ * @return False if the uniform was not found in the currently bound shader.
+ */
+bool Shader::cacheUniformLocation(const std::string& uniformName) {
     GLint loc = glGetUniformLocation(mID, uniformName.c_str());
     if (loc < 0) {
         return false;

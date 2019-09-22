@@ -5,7 +5,7 @@
 //
 
 #pragma once
-#include <GLFW/glfw3.h>
+#include "gl_glfw.h"
 #include <imgui.h>
 #include <vector>
 #include <string>

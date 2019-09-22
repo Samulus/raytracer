@@ -18,7 +18,7 @@ public:
     Shader(const char* vertexSource, const char* fragmentSource);
     ~Shader();
     [[ nodiscard ]] GLint getProgramID() const;
-    bool rememberUniformLocation(const std::string& uniformName);
+    bool cacheUniformLocation(const std::string& uniformName);
     [[ nodiscard ]] GLint getUniformLocation(const std::string& uniformName) const;
 private:
     static GLint linkProgram(GLint vertexID, GLint fragmentID);

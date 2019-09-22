@@ -5,12 +5,10 @@
 //
 
 #pragma once
+#include <linalg.h>
 #include <vector>
 #include <GL/gl.h>
 
-class ProcedualVertexBuffer {
-private:
-    void* buffer;
-public:
-    ProcedualVertexBuffer();
-};
+namespace ProcedualVertexBuffer {
+    GLvoid* unitWireFrameBuffer(linalg::vec<float, 3> color);
+}

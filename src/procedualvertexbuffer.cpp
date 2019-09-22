@@ -5,8 +5,25 @@
 //
 
 #include "procedualvertexbuffer.h"
+#include <vector>
 
-ProcedualVertexBuffer::ProcedualVertexBuffer() {
+GLvoid* ProcedualVertexBuffer::unitWireFrameBuffer(linalg::vec<float, 3> color) {
 
-    // we need to add a rectangle
+    std::vector<GLfloat> vertices = {
+        // Rear
+        -0.5,  0.5, -0.5, // upper rear left vertex
+         0.5,  0.5, -0.5, // upper rear right vertex
+        -0.5, -0.5, -0.5, // bottom rear left vertex
+         0.5, -0.5, -0.5  // bottom rear right vertex
+        // Front
+        -0.5,  0.5,  0.5, // upper front left vertex
+         0.5,  0.5,  0.5, // upper front right vertex
+        -0.5, -0.5,  0.5, // bottom front left vertex
+         0.5, -0.5,  0.5  // bottom front right vertex
+    };
+
+    std::vector<GLuint> indices = {
+
+    };
+
 }

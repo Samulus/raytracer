@@ -27,12 +27,12 @@ TEST_CASE("Ray casted from point on plane directly below sphere results in a col
 
     auto sphere = std::make_shared<Sphere>(Sphere(sphereOrigin, sphereRadius, sphereMaterial));
     auto plane = std::make_shared<Plane>(Plane(planeOrigin, planeNormal, planeMaterial));
-    auto sun = std::make_unique<SunLight>(SunLight(sunDirection, WHITE, sunIntensity));
+    auto sun = std::make_unique<Light>(SunLight(sunDirection, WHITE, sunIntensity));
     auto world = World();
     auto diffuseLighting = DiffuseLighting();
     world.addGeometry(sphere);
     world.addGeometry(plane);
-    diffuseLighting.addLight(std::move(sun));
+    diffuseLighting.addLight(sun);
 
     auto pointUnderSphere = sphereOrigin;
     pointUnderSphere.y = planeOrigin.y;
@@ -60,12 +60,12 @@ TEST_CASE("Sole plane is illuminated by extremely bright light") {
     const auto sunColor = WHITE;
 
     auto plane = std::make_shared<Plane>(Plane(planeOrigin, planeNormal, planeMaterial));
-    auto sun = std::make_unique<SunLight>(SunLight(sunDirection, WHITE, sunIntensity));
+    auto sun = std::make_unique<Light>(SunLight(sunDirection, WHITE, sunIntensity));
 
     auto world = World();
     auto diffuseLighting = DiffuseLighting();
     world.addGeometry(plane);
-    diffuseLighting.addLight(std::move(sun));
+    diffuseLighting.addLight(sun);
 
     GLubyte r = 0;
     GLubyte g = 0;
@@ -105,7 +105,9 @@ TEST_CASE("Point Light over Sphere over Triangle Casts Shadow on Triangle") {
     auto world = World();
     auto diffuseLighting = DiffuseLighting();
 
-    diffuseLighting.addLight(std::make_unique<PointLight>(PointLight(linalg::vec<float,3>(0, 1, -0.5), WHITE, 100.0f)));
+    auto light = std::make_unique<Light>(PointLight(linalg::vec<float,3>(0, 1, -0.5), WHITE, 100.0f));
+
+    diffuseLighting.addLight(light);
 
     const linalg::vec<float,3> v0 = linalg::vec<float,3>(0, 0, -1);
     const linalg::vec<float,3> v1 = linalg::vec<float,3>(-1, 0, 0);
