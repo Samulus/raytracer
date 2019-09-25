@@ -51,10 +51,10 @@ LuaBinding::LuaBinding() : global(sol::state()){
     });
 
     // Material
-    global.new_enum<MaterialType>("MaterialType", {
-        {"Reflective", MaterialType::Reflective},
-        {"Diffuse", MaterialType::Diffuse}
-    });
+    global.new_enum("MaterialType",
+        "Reflective", MaterialType::Reflective,
+        "Diffuse", MaterialType::Diffuse
+    );
 
     auto material = global.new_usertype<Material>(
             "Material", sol::constructors<Material(float3, float3, MaterialType, float)>());
@@ -138,7 +138,6 @@ UniverseData LuaBinding::loadUniverseFromScript(const std::filesystem::path& lua
     if (!result) {
         throw std::runtime_error("Lua program bad, see pfr");
     }
-
 
     return result.value();
 }

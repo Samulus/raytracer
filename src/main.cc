@@ -98,5 +98,5 @@ int main(int ac, char **av) {
 
     spdlog::info("Close requested, goodbye!");
     glfwTerminate();
-    return 0;
+    exit(0);
 }
