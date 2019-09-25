@@ -41,7 +41,7 @@ DiffuseLighting::calculatePixelColor(
         return std::optional<RayCollision>(newRayCollision);
     }
 
-    assert(false);
+    assert(false); // sometimes we can get here for no reason
     return std::nullopt;
 }
 void DiffuseLighting::calculateDiffuseColor(

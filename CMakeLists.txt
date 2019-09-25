@@ -58,7 +58,6 @@ add_executable(raytracer_release
         src/albedo.h
         src/color.h
         src/universe.h
-        src/scenes.h
         src/material.h
         src/raycollision.h
         src/wavefrontobj.h

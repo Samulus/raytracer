@@ -14,8 +14,8 @@ private:
     GLuint vao = 0;
     GLuint vbo = 0;
     GLuint ebo = 0;
-    GLuint textureId;
-    GLuint textureCoordinateBuffer;
+    GLuint textureId = 0;
+    GLuint textureCoordinateBuffer = 0;
     std::vector<GLfloat> quadVertices {1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0};
     std::vector<GLuint> quadIndices = std::vector<GLuint> { 0, 3, 2, 2, 1, 0};
     std::vector<GLfloat> texCoords {0, 0, 1, 0, 0, 1, 1, 1};

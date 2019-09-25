@@ -22,11 +22,12 @@ local Universe = {
 }
 
 local Geometry = {
-    Sphere.new(Vec3f.new(0, 0.2, -2), 0.1, Color.white)
+    --Sphere.new(Vec3f.new(0, 0, -1), 0.1, Color.white),
+    Sphere.new(Vec3f.new(-0.1, 0, -1), 0.05, Color.red)
 }
 
 local Lighting = {
-    SunLight.new(Vec3f.new(0, -1, 0), Color.white, 25),
+    SunLight.new(Vec3f.new(0, -1, -1), Color.white, 100),
 }
 
 for _, geo in ipairs(Geometry) do
@@ -37,5 +38,5 @@ for _, light in ipairs(Lighting) do
     Universe.lightTransport:addLight(light)
 end
 
-return WorldLightEyeTuple
+return UniverseData.new(Universe.world, Universe.lightTransport, Universe.eyeMatrix)
 --]]

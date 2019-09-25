@@ -7,6 +7,7 @@
 #include "raytracer.h"
 #include "lerp.h"
 #include "spaceconversion.h"
+#include <cassert>
 
 //static constexpr linalg::vec<float,3> SKY_LIGHT_COLOR = linalg::vec<float,3>{0.6901, 0.62745, 0.88};
 //static constexpr linalg::vec<float,3> SKY_DARK_COLOR = linalg::vec<float,3>{0.89411, 0.69019, 0.75};
@@ -78,11 +79,11 @@ void RayTracer::generateImage() {
 
 RayCollision RayTracer::findNearestRayCollision(const Ray& ray) {
     float nearestGeometryIntersectionScalar = -1.0f;
-    const std::shared_ptr<Geometry>* nearestGeometry = nullptr;
+    std::shared_ptr<Geometry> nearestGeometry;
     for (const auto& geo : world.getGeometry()) {
         const float t = geo->getIntersectionScalarForRay(ray);
         if (t > nearestGeometryIntersectionScalar) {
-            nearestGeometry = &geo;
+            nearestGeometry = std::shared_ptr<Geometry>(geo);
             nearestGeometryIntersectionScalar = t;
         }
     }
@@ -91,7 +92,8 @@ RayCollision RayTracer::findNearestRayCollision(const Ray& ray) {
         return RayCollision(ray, ray.pointWithScalar(nearestGeometryIntersectionScalar));
     }
 
-    return RayCollision(ray, ray.pointWithScalar(nearestGeometryIntersectionScalar), *nearestGeometry);
+    assert(nearestGeometry != nullptr);
+    return RayCollision(ray, ray.pointWithScalar(nearestGeometryIntersectionScalar), nearestGeometry);
 }
 
 void

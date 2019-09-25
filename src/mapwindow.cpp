@@ -7,15 +7,25 @@
 #include "mapwindow.h"
 
 #include <utility>
-#include <cassert>
 #include "gl_glfw.h"
 
-MapWindow::MapWindow(std::shared_ptr<Gui>  gui) : gui(std::move(gui)) {
+MapWindow::MapWindow(std::shared_ptr<Gui>  gui) : mapRenderer(MapRenderer()), gui(std::move(gui)) {
 }
 
-void MapWindow::render() {
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+void MapWindow::render(GLFWwindow* window) {
+    mapRenderer.render();
+
     ImGui::Begin("Map");
+
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+
+    ImGui::GetWindowDrawList()->AddImage(
+            (void *)mapRenderer.getFramebufferTextureId(),
+            ImVec2(ImGui::GetCursorScreenPos()),
+            ImVec2(ImGui::GetCursorScreenPos().x + width/2,
+                   ImGui::GetCursorScreenPos().y + height/2), ImVec2(0, 1), ImVec2(1, 0));
+
+
     ImGui::End();
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

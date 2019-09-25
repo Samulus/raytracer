@@ -48,15 +48,13 @@ int main(int ac, char **av) {
     spdlog::info("Keyboard / Error Callback initialized");
 
     auto fullscreenquad = FullscreenQuad();
-
     const auto& onResize = [&](GLFWwindow* window, int x, int y) {
-        glViewport(0, 0, x, y);
         fullscreenquad.resize(x, y);
     };
 
     GLFWManager::addFrameBufferResizeCallback(onResize);
     glfwSetFramebufferSizeCallback(window.getWindowPointer(), GLFWManager::onFrameBufferResize);
-    spdlog::info("Framebuffer Resize  Callback initialized");
+    spdlog::info("FullscreenQuad initialized");
 
     int width, height;
     glfwGetFramebufferSize(window.getWindowPointer(), &width, &height);
@@ -70,9 +68,9 @@ int main(int ac, char **av) {
     }
 
     auto mapWindow = MapWindow(gui);
-    auto mapRenderer = MapRenderer();
 
     spdlog::info("Starting Render Loop");
+
     while (!window.shouldClose()) {
         window.clear();
         glfwPollEvents();
@@ -89,8 +87,8 @@ int main(int ac, char **av) {
                 fullscreenquad.setImage(rgbImage.getRGBData(), rgbImage.getXRes(), rgbImage.getYRes());
             }
         }
-        mapRenderer.render();
-        mapWindow.render();
+
+        mapWindow.render(window.getWindowPointer());
         fullscreenquad.render(window.getWindowPointer());
 
         gui->render();

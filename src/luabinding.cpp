@@ -121,24 +121,24 @@ LuaBinding::LuaBinding() : global(sol::state()){
 
     // Geometry
     auto geometry = global.new_usertype<Geometry>("Geometry");
-
     auto sphere = global.new_usertype<Sphere>("Sphere",
         sol::constructors<Sphere(float3, float, Material)>(),
         sol::base_classes, sol::bases<Geometry>()
     );
+
+    // Universe Data
+    auto universeData = global.new_usertype<UniverseData>("UniverseData",
+        sol::constructors<UniverseData(World, LightTransport&, linalg::aliases::float4x4)>()
+    );
 }
 
 UniverseData LuaBinding::loadUniverseFromScript(const std::filesystem::path& luaFile) {
-    auto result = global.safe_script_file(luaFile);
+    sol::optional<UniverseData> result = global.safe_script_file(luaFile);
 
-    global.collect_garbage();
-
-    if (!result.valid()) {
+    if (!result) {
         throw std::runtime_error("Lua program bad, see pfr");
     }
 
-    auto world = World();
-    auto diffuseLighting = DiffuseLighting();
-    auto eye = linalg::aliases::float4x4();
-    return UniverseData(world, diffuseLighting, eye);
+
+    return result.value();
 }

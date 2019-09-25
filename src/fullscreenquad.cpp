@@ -3,6 +3,10 @@
 // Author: Samuel Vargas 
 // Date: 09/21/2019
 //
+// TODO:
+//  - Do not regenerate textureIds if overwriting…
+
+#include <cassert>
 
 #include "fullscreenquad.h"
 
@@ -15,35 +19,29 @@ const char *RAYTRACER_VERTEX_SHADER =
 ;
 
 FullscreenQuad::FullscreenQuad() : shader(Shader(RAYTRACER_VERTEX_SHADER, RAYTRACER_FRAGMENT_SHADER)) {
-
     if (!shader.cacheUniformLocation("iResolution")) {
         throw std::runtime_error("Could not find uniform `iResolution`");
     }
 
     glGenVertexArrays(1, &vao);
-
-    // Vertex Buffers
-    glBindVertexArray(vao);
-
     glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER,
-            quadVertices.size() * sizeof(GLfloat),
-            &quadVertices.front(),
-            GL_STATIC_DRAW);
-
     glGenBuffers(1, &ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 quadIndices.size() * sizeof(GLuint),
-                 &quadIndices.front(),
-                 GL_STATIC_DRAW);
 
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, quadVertices.size() * sizeof(GLfloat), &quadVertices.front(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, quadIndices.size() * sizeof(GLuint), &quadIndices.front(), GL_STATIC_DRAW);
+
+    glUseProgram(shader.getProgramID());
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, nullptr);
 }
 
 void FullscreenQuad::setImage(const std::vector<GLubyte>& imageData, GLuint xRes, GLuint yRes) {
+    glBindVertexArray(vao);
+
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
@@ -64,13 +62,11 @@ void FullscreenQuad::setImage(const std::vector<GLubyte>& imageData, GLuint xRes
     // Upload Texture Coordinates
     glGenBuffers(1, &textureCoordinateBuffer);
     glBindBuffer(GL_TEXTURE_BUFFER, textureCoordinateBuffer);
-    glBufferData(GL_TEXTURE_BUFFER,
-                 texCoords.size() * sizeof(GLfloat),
-                 &texCoords.front(),
-                 GL_STATIC_DRAW);
+    glBufferData(GL_TEXTURE_BUFFER, texCoords.size() * sizeof(GLfloat), &texCoords.front(), GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, nullptr);
+    assert(glGetError() == GL_NO_ERROR);
 }
 
 void FullscreenQuad::resize(GLuint xRes, GLuint yRes) {
