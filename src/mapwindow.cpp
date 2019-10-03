@@ -21,7 +21,7 @@ void MapWindow::render(GLFWwindow* window) {
     glfwGetFramebufferSize(window, &width, &height);
 
     ImGui::GetWindowDrawList()->AddImage(
-            (void *)mapRenderer.getFramebufferTextureId(),
+            reinterpret_cast<ImTextureID>(mapRenderer.getFramebufferTextureId()),
             ImVec2(ImGui::GetCursorScreenPos()),
             ImVec2(ImGui::GetCursorScreenPos().x + width/2,
                    ImGui::GetCursorScreenPos().y + height/2), ImVec2(0, 1), ImVec2(1, 0));

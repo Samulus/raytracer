@@ -10,7 +10,9 @@
 
 #include "geometry.h"
 #include "sphere.h"
-#include <sol/sol.hpp>
+#define SOL_PRINT_ERRORS 1
+#define SOL_ALL_SAFETIES_ON 1
+#include "sol/sol.hpp"
 #include "world.h"
 #include "universedata.h"
 

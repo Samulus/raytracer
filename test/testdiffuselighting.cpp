@@ -38,9 +38,8 @@ TEST_CASE("Ray casted from point on plane directly below sphere results in a col
     pointUnderSphere.y = planeOrigin.y;
 
     const auto rayFromSpotUnderSphereOnPlaneIntoPlane = Ray(pointUnderSphere, planeNormal);
-    const auto rayCollision = diffuseLighting.rayIntersectsAnyGeometry(
+    const auto rayCollision = world.rayIntersectionTest(
             rayFromSpotUnderSphereOnPlaneIntoPlane,
-            world,
             Universe::MaximumViewDistance
     );
 

@@ -1,5 +1,5 @@
 --
--- SAM
+-- RGB.lua
 -- Author: Samuel Vargas 
 -- Date: 09/15/2019
 --
@@ -28,10 +28,10 @@ local Universe = {
 }
 
 local Geometry = {
-    Sphere.new(Vec3f.new(-0.3, 0, -1), 0.1, Material.green),
-    Sphere.new(Vec3f.new(0, 0, -1), 0.1, Material.mirror),
-    Sphere.new(Vec3f.new(0.0, 0, -2), 0.1, Material.red),
+    Sphere.new(Vec3f.new(-0.3, 0, -1), 0.1, Material.red),
+    Sphere.new(Vec3f.new(0.0, 0, -1), 0.1, Material.green),
     Sphere.new(Vec3f.new(0.3, 0, -1), 0.1, Material.blue),
+    Plane.new(Vec3f.new(0.0, 0, 0.1), Vec3f.new(0, 1, 0), Material.white),
 }
 
 local Lighting = {

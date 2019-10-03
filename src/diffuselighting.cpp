@@ -41,7 +41,7 @@ DiffuseLighting::calculatePixelColor(
         return std::optional<RayCollision>(newRayCollision);
     }
 
-    assert(false); // sometimes we can get here for no reason
+    assert(false);
     return std::nullopt;
 }
 void DiffuseLighting::calculateDiffuseColor(
@@ -61,7 +61,7 @@ void DiffuseLighting::calculateDiffuseColor(
 
         // Shadow Detection
         const auto occlusionRay = Ray(intersectionPoint + (surfaceNormal * SHADOW_BIAS), inverseLightDirection);
-        if (rayIntersectsAnyGeometry(occlusionRay, world, distanceToLight) != std::nullopt) {
+        if (world.rayIntersectionTest(occlusionRay, distanceToLight) != std::nullopt) {
             r = 0;
             g = 0;
             b = 0;
@@ -77,22 +77,7 @@ void DiffuseLighting::addLight(std::unique_ptr<Light>& light) {
     lights.emplace_back(std::move(light));
 }
 
-std::optional<RayCollision>
-DiffuseLighting::rayIntersectsAnyGeometry(const Ray& occlusionRay, const World& world, float maxScalarDistance) const {
-    for (const auto& currentGeometry : world.getGeometry()) {
-        const auto intersectionScalar = currentGeometry->getIntersectionScalarForRay(occlusionRay);
-        const auto isOccluded = intersectionScalar > 0 && intersectionScalar < maxScalarDistance;
-
-        if (isOccluded) {
-            auto result = RayCollision(occlusionRay, occlusionRay.pointWithScalar(intersectionScalar), currentGeometry);
-            return std::optional<RayCollision>(result);
-        }
-
-    }
-    return std::nullopt;
-}
-
-linalg::vec<float,3> DiffuseLighting::calculateLightContribution(
+linalg::aliases::float3 DiffuseLighting::calculateLightContribution(
         const Light* light,
         const linalg::vec<float,3>& intersectionPoint,
         const Geometry* hitObject) const {

@@ -81,7 +81,16 @@ add_executable(raytracer_release
         src/universedata.h
         src/universedata.cpp
         src/filebrowserwindow.cpp
-        src/filebrowserwindow.h src/mapwindow.cpp src/mapwindow.h src/gl_glfw.h src/maprenderer.cpp src/maprenderer.h src/fullscreenquad.cpp src/fullscreenquad.h)
+        src/filebrowserwindow.h
+        src/mapwindow.cpp
+        src/mapwindow.h
+        src/gl_glfw.h
+        src/maprenderer.cpp
+        src/maprenderer.h
+        src/fullscreenquad.cpp
+        src/fullscreenquad.h
+        src/phonglighting.cpp
+        src/phonglighting.h)
 
 
 target_include_directories(raytracer_release PRIVATE lib/imgui)

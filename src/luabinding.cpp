@@ -90,6 +90,8 @@ LuaBinding::LuaBinding() : global(sol::state()){
                 diffuseLighting.addLight(tmp);
                 return;
             }
+
+            throw std::runtime_error("Unknown light.");
         }
     );
 
@@ -123,6 +125,11 @@ LuaBinding::LuaBinding() : global(sol::state()){
     auto geometry = global.new_usertype<Geometry>("Geometry");
     auto sphere = global.new_usertype<Sphere>("Sphere",
         sol::constructors<Sphere(float3, float, Material)>(),
+        sol::base_classes, sol::bases<Geometry>()
+    );
+
+    auto plane = global.new_usertype<Plane>("Plane",
+        sol::constructors<Plane(float3, float3, Material)>(),
         sol::base_classes, sol::bases<Geometry>()
     );
 

@@ -8,6 +8,7 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include "raycollision.h"
 #include "sphere.h"
 #include "light.h"
 
@@ -17,5 +18,6 @@ private:
 public:
     explicit World() = default;
     void addGeometry(const std::shared_ptr<Geometry>& geometry);
-    [[ nodiscard ]] const std::vector<std::shared_ptr<Geometry>> getGeometry() const;
+    [[ nodiscard ]] std::vector<std::shared_ptr<Geometry>> getGeometry() const;
+    [[nodiscard]] std::optional<RayCollision> rayIntersectionTest(const Ray& ray, float maxScalarDistance) const;
 };
