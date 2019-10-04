@@ -92,7 +92,8 @@ LuaBinding::LuaBinding() : global(sol::state()){
             }
 
             throw std::runtime_error("Unknown light.");
-        }
+        },
+        sol::base_classes, sol::bases<LightTransport>()
     );
 
     // World
@@ -135,7 +136,7 @@ LuaBinding::LuaBinding() : global(sol::state()){
 
     // Universe Data
     auto universeData = global.new_usertype<UniverseData>("UniverseData",
-        sol::constructors<UniverseData(World, LightTransport&, linalg::aliases::float4x4)>()
+        sol::constructors<UniverseData(World, LightTransport&, float4x4)>()
     );
 }
 
