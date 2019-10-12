@@ -7,7 +7,7 @@
 #include "diffuselighting.h"
 #include "spaceconversion.h"
 #include <algorithm>
-static float SHADOW_BIAS = 1e-4;
+static float SHADOW_BIAS = 1e-4f;
 DiffuseLighting::~DiffuseLighting() = default;
 
 std::optional<RayCollision>
@@ -69,9 +69,9 @@ void DiffuseLighting::calculateDiffuseColor(
         }
         finalColor += calculateLightContribution(light.get(), intersectionPoint, hitObject.get());
     }
-    r = std::clamp(finalColor.x * 255.0f, 0.0f, 255.0f);
-    g = std::clamp(finalColor.y * 255.0f, 0.0f, 255.0f);
-    b = std::clamp(finalColor.z * 255.0f, 0.0f, 255.0f);
+    r = static_cast<GLubyte>(std::clamp(finalColor.x * 255.0f, 0.0f, 255.0f));
+    g = static_cast<GLubyte>(std::clamp(finalColor.y * 255.0f, 0.0f, 255.0f));
+    b = static_cast<GLubyte>(std::clamp(finalColor.z * 255.0f, 0.0f, 255.0f));
 }
 void DiffuseLighting::addLight(std::unique_ptr<Light>& light) {
     lights.emplace_back(std::move(light));

@@ -25,9 +25,9 @@ std::optional<RayCollision> FacingRatioLightTransport::calculatePixelColor(GLuby
     const auto& color = rayCollision.hitObject.value().get()->getMaterial().color;
     const auto& surfaceNormal = rayCollision.hitObject.value().get()->getSurfaceNormal(rayCollision.intersectionPoint);
     float ratio = std::max(0.0f, linalg::dot(surfaceNormal, -rayCollision.ray.direction));
-    r = ratio * color.x * 255.0f;
-    g = ratio * color.y * 255.0f;
-    b = ratio * color.z * 255.0f;
+    r = static_cast<GLubyte>(ratio * color.x * 255.0f);
+    g = static_cast<GLubyte>(ratio * color.y * 255.0f);
+    b = static_cast<GLubyte>(ratio * color.z * 255.0f);
     return std::nullopt;
 }
 

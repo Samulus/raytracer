@@ -1,32 +1,11 @@
 cmake_minimum_required(VERSION 3.9)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set (CMAKE_CXX_STANDARD 17)
-project(raytracer VERSION 0.0.0
-        DESCRIPTION "Simple raytracer"
-        LANGUAGES CXX)
+project(raytracer VERSION 0.0.0 DESCRIPTION "Simple raytracer" LANGUAGES CXX)
 
-function(find_static_library LIB_NAME OUT)
-
-    if (WIN32 OR MSVC)
-        set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
-    elseif (UNIX)
-        set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-    endif()
-
-    find_library(
-            FOUND_${LIB_NAME}_STATIC
-            ${LIB_NAME}
-    )
-
-    if (FOUND_${LIB_NAME}_STATIC)
-        get_filename_component(ABS_FILE ${FOUND_${LIB_NAME}_STATIC} ABSOLUTE)
-    else()
-        message(SEND_ERROR "Unable to find library ${LIB_NAME}")
-    endif()
-
-    set(${OUT} ${ABS_FILE} PARENT_SCOPE)
-
-endfunction()
+# Seek out the highest versions
+set(CMAKE_FIND_PACKAGE_SORT_ORDER NATURAL)
+set(CMAKE_FIND_PACKAGE_SORT_DIRECTION DEC)
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GLEW REQUIRED)
@@ -115,32 +94,34 @@ add_executable(raytracer_release
         src/phonglighting.h)
 
 
+# Local Libraries
 target_include_directories(raytracer_release PRIVATE lib/imgui)
 target_include_directories(raytracer_release PRIVATE lib/linalg)
 target_include_directories(raytracer_release PRIVATE lib/sol3)
-target_include_directories(raytracer_release PRIVATE ${LUA_INCLUDE_DIR})
 target_include_directories(raytracer_release PRIVATE lib/tinydir)
 target_include_directories(raytracer_release PRIVATE lib/clipp)
+
+# vcpkg provided libraries
+target_include_directories(raytracer_release PRIVATE ${LUA_INCLUDE_DIR})
+target_link_directories(raytracer_release PRIVATE ${LUA_LIBRARY}/../)
+
+# Library options
 add_compile_definitions(SOL_ALL_SAFETIES_ON=1)
 
-
 # Debugging: Print all CMake Variables
-#get_cmake_property(_variableNames VARIABLES)
-#list (SORT _variableNames)
-#foreach (_variableName ${_variableNames})
-#    message(STATUS "${_variableName}=${${_variableName}}")
-#endforeach()
+get_cmake_property(_variableNames VARIABLES)
+list (SORT _variableNames)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
 
-find_static_library(lua LUA_STATIC)
-target_link_libraries(raytracer_release PRIVATE ${LUA_STATIC})
+target_link_libraries(raytracer_release PRIVATE lua)
 target_link_libraries(raytracer_release PRIVATE glfw)
 target_link_libraries(raytracer_release PRIVATE GLEW::GLEW)
 target_link_libraries(raytracer_release PRIVATE ${OPENGL_LIBRARIES})
 target_link_libraries(raytracer_release PRIVATE spdlog::spdlog)
 target_link_libraries(raytracer_release PRIVATE tinyobjloader::tinyobjloader)
 target_link_libraries(raytracer_release PRIVATE imgui::imgui)
-
-
 
 # Tests
 find_package(doctest CONFIG REQUIRED)
@@ -191,7 +172,6 @@ add_executable(raytracer_test
 
 target_include_directories(raytracer_test PRIVATE src)
 target_include_directories(raytracer_test PRIVATE lib/linalg/)
-
 
 target_link_libraries(raytracer_test PRIVATE doctest::doctest)
 target_link_libraries(raytracer_test PRIVATE glfw)
