@@ -33,8 +33,8 @@ int main(int ac, char **av) {
     spdlog::info("Window initialized");
 
     GLFWManager::addErrorCallback([] (int error, const char* description){
-        spdlog::critical(std::string(description));
-        exit(1);
+        //spdlog::critical(std::string(description));
+        //exit(1);
     });
 
     GLFWManager::addKeyPressCallback([] (GLFWwindow* window, int key, int scancode, int action, int mods){

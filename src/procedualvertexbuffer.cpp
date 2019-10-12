@@ -26,4 +26,5 @@ GLvoid* ProcedualVertexBuffer::unitWireFrameBuffer(linalg::vec<float, 3> color) 
 
     };
 
+    return nullptr;
 }

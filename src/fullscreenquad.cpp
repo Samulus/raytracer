@@ -7,6 +7,7 @@
 //  - Do not regenerate textureIds if overwriting…
 
 #include <cassert>
+#include <stdexcept>
 
 #include "fullscreenquad.h"
 

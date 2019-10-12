@@ -4,7 +4,6 @@
 // Date: 09/15/2019
 //
 
-#include "tinydir.h" // TODO: Remove tinydir, pretty sure <filesystem> does everything now
 #include <optional>
 #include <filesystem>
 

@@ -14,12 +14,12 @@ TEST_CASE("Plane::getIntersectionScalarForRay(…)") {
 
     const auto opaqueWhite = Material(WHITE, AVERAGE_ALBEDO, MaterialType::Diffuse, 0);
     std::map<std::string, linalg::vec<float,3>> eyeDirections =  {
-        {"forward", linalg::vec<float,3>(0, 0, -1)},
-        {"behind",  linalg::vec<float,3>(0, 0, 1)},
-        {"left",    linalg::vec<float,3>(-1, 0, 0)},
-        {"right",   linalg::vec<float,3>(1, 0, 0)},
-        {"top",     linalg::vec<float,3>(0, 1, 0)},
-        {"bottom",  linalg::vec<float,3>(0, -1, 0)}
+        {"forward", linalg::aliases::float3(0, 0, -1)},
+        {"behind",  linalg::aliases::float3(0, 0, 1)},
+        {"left",    linalg::aliases::float3(-1, 0, 0)},
+        {"right",   linalg::aliases::float3(1, 0, 0)},
+        {"top",     linalg::aliases::float3(0, 1, 0)},
+        {"bottom",  linalg::aliases::float3(0, -1, 0)}
     };
 
     SUBCASE("Eye looking at each plane in a box triggers a collision") {

@@ -9,7 +9,7 @@
 #include <linalg.h>
 
 namespace Universe {
-    static constexpr auto MaximumViewDistance = 100.0f;
-    static constexpr auto HumanEyeLevel = 1.8288;
-    static constexpr auto HumanEyeOrigin = linalg::vec<float,3>(0, HumanEyeLevel, 0);
+    static constexpr float MaximumViewDistance = 100.0f;
+    static constexpr float HumanEyeLevel = 1.8288f;
+    static constexpr linalg::aliases::float3 HumanEyeOrigin = linalg::vec<float,3>(0, HumanEyeLevel, 0);
 }

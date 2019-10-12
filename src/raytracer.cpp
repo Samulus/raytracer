@@ -9,11 +9,9 @@
 #include "spaceconversion.h"
 #include <cassert>
 
-//static constexpr linalg::vec<float,3> SKY_LIGHT_COLOR = linalg::vec<float,3>{0.6901, 0.62745, 0.88};
-//static constexpr linalg::vec<float,3> SKY_DARK_COLOR = linalg::vec<float,3>{0.89411, 0.69019, 0.75};
-static constexpr linalg::vec<float,3> SKY_LIGHT_COLOR = linalg::vec<float,3>{0.8, 0.8, 0.8};
-static constexpr linalg::vec<float,3> SKY_DARK_COLOR = linalg::vec<float,3>{0, 0.19607, 0.298039};
-static int MAXIMUM_REFLECTION_RECURSION = 5;
+static constexpr auto SKY_LIGHT_COLOR = linalg::vec<float,3>{0.8f, 0.8f, 0.8f};
+static constexpr auto SKY_DARK_COLOR = linalg::vec<float,3>{0, 0.19607f, 0.298039f};
+static unsigned int MAXIMUM_REFLECTION_RECURSION = 5;
 
 RayTracer::RayTracer(
         RGBImage& rgbImage, 
@@ -69,9 +67,9 @@ void RayTracer::generateImage() {
 
                 if (!doneColoringReflections) {
                     generateSkyPixel(r, g, b, y, maxWidth);
-                    r *= 0.8;
-                    g *= 0.8;
-                    b *= 0.8;
+                    r = static_cast<GLubyte>(r * 0.8);
+                    g = static_cast<GLubyte>(g * 0.8);
+                    b = static_cast<GLubyte>(b * 0.8);
                 }
             }
     );
@@ -100,8 +98,8 @@ void
 RayTracer::generateSkyPixel(GLubyte& r, GLubyte& g, GLubyte& b, const unsigned int& y, const unsigned int& maxHeight) {
     const float blendAmount = (float(y) / float(maxHeight));
     auto skyColor = lerp(SKY_LIGHT_COLOR, SKY_DARK_COLOR, blendAmount);
-    r = skyColor.x * 255;
-    g = skyColor.y * 255;
-    b = skyColor.z * 255;
+    r = static_cast<GLubyte>(skyColor.x * 255.0f);
+    g = static_cast<GLubyte>(skyColor.y * 255.0f);
+    b = static_cast<GLubyte>(skyColor.z * 255.0f);
 }
 

@@ -141,7 +141,7 @@ LuaBinding::LuaBinding() : global(sol::state()){
 }
 
 UniverseData LuaBinding::loadUniverseFromScript(const std::filesystem::path& luaFile) {
-    sol::optional<UniverseData> result = global.safe_script_file(luaFile);
+    sol::optional<UniverseData> result = global.safe_script_file(luaFile.u8string());
 
     if (!result) {
         throw std::runtime_error("Lua program bad, see pfr");

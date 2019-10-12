@@ -5,7 +5,6 @@
 //
 
 #include "rgbimage.h"
-#include <parallel/algorithm>
 RGBImage::RGBImage(unsigned int xRes, unsigned int yRes) : xRes(xRes), yRes(yRes) {
     byteData = std::vector<GLubyte>(xRes * yRes * 3, 0);
 }

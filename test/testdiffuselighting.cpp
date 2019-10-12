@@ -16,7 +16,7 @@ static const auto OPAQUE_WHITE = Material(WHITE, AVERAGE_ALBEDO, MaterialType::D
 
 TEST_CASE("Ray casted from point on plane directly below sphere results in a collision") {
     const auto sphereOrigin = linalg::vec<float,3>(0, 2, -4);
-    const auto sphereRadius = 0.1;
+    const auto sphereRadius = 0.1f;
     const auto sphereMaterial = OPAQUE_WHITE;
     const auto planeOrigin = linalg::vec<float,3>(0, 0, 0);
     const auto planeNormal = linalg::vec<float,3>(0, 1, 0);
@@ -25,8 +25,8 @@ TEST_CASE("Ray casted from point on plane directly below sphere results in a col
     const auto sunIntensity = 20.0f;
     const auto sunColor = WHITE;
 
-    auto sphere = std::make_shared<Sphere>(Sphere(sphereOrigin, sphereRadius, sphereMaterial));
-    auto plane = std::make_shared<Plane>(Plane(planeOrigin, planeNormal, planeMaterial));
+    std::shared_ptr<Sphere> sphere = std::make_shared<Sphere>(Sphere(sphereOrigin, sphereRadius, sphereMaterial));
+    std::shared_ptr<Plane> plane = std::make_shared<Plane>(Plane(planeOrigin, planeNormal, planeMaterial));
     std::unique_ptr<Light> sun = std::make_unique<SunLight>(SunLight(sunDirection, WHITE, sunIntensity));
     auto world = World();
     auto diffuseLighting = DiffuseLighting();
@@ -114,10 +114,10 @@ TEST_CASE("Point Light over Sphere over Triangle Casts Shadow on Triangle") {
     const linalg::vec<float,3> v2 = linalg::vec<float,3>(1, 0, 0);
     const linalg::vec<float,3> normal = linalg::vec<float,3>(0, 1, 0);
 
-    const auto sphereOrigin = linalg::vec<float,3>(0.5, 0.2, -0.5);
+    const auto sphereOrigin = linalg::vec<float,3>(0.5f, 0.2f, -0.5f);
 
-    const auto sphere = std::make_shared<Sphere>(Sphere(sphereOrigin, 0.1, OPAQUE_RED));
-    const auto triangle = std::make_shared<Triangle>(Triangle(v0, v1, v2, normal, OPAQUE_WHITE));
+    const std::shared_ptr<Sphere> sphere = std::make_shared<Sphere>(Sphere(sphereOrigin, 0.1f, OPAQUE_RED));
+    const std::shared_ptr<Triangle> triangle = std::make_shared<Triangle>(Triangle(v0, v1, v2, normal, OPAQUE_WHITE));
 
     world.addGeometry(sphere);
     world.addGeometry(triangle);
@@ -125,7 +125,7 @@ TEST_CASE("Point Light over Sphere over Triangle Casts Shadow on Triangle") {
     // Create a ray starting 1cm under the sphere pointing down and into the triangle below,
     // it should be in the shadow.
     auto rayOrigin = linalg::vec<float,3>(sphereOrigin);
-    rayOrigin.y = sphereOrigin.y - 0.01;
+    rayOrigin.y = sphereOrigin.y - 0.01f;
     const auto ray = Ray(rayOrigin, linalg::vec<float,3>(0, -1, 0));
     auto triangleIntersectionPoint = linalg::vec<float,3>(sphereOrigin);
     triangleIntersectionPoint.y = v0.y;

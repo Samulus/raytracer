@@ -34,7 +34,9 @@ Arguments Arguments::handleArguments(int ac, char** av) {
                    .set(version)
     );
 
-    const std::string programName = std::filesystem::path(av[0]).filename();
+    const std::string programName = std::filesystem::path(av[0])
+            .filename()
+            .u8string();
 
     const auto result = clipp::parse(ac, av, cli);
     if (!result) {

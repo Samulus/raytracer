@@ -6,4 +6,4 @@
 
 #pragma once
 #include <linalg.h>
-static constexpr linalg::vec<float,3> AVERAGE_ALBEDO = linalg::vec<float,3>(0.18, 0.18, 0.18);
+static constexpr linalg::vec<float,3> AVERAGE_ALBEDO = linalg::vec<float,3>(0.18f, 0.18f, 0.18f);

@@ -7,7 +7,7 @@
 #pragma once
 #include <linalg.h>
 #include <vector>
-#include <GL/gl.h>
+#include "gl_glfw.h"
 
 namespace ProcedualVertexBuffer {
     GLvoid* unitWireFrameBuffer(linalg::vec<float, 3> color);

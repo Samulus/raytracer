@@ -5,6 +5,29 @@ project(raytracer VERSION 0.0.0
         DESCRIPTION "Simple raytracer"
         LANGUAGES CXX)
 
+function(find_static_library LIB_NAME OUT)
+
+    if (WIN32 OR MSVC)
+        set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+    elseif (UNIX)
+        set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    endif()
+
+    find_library(
+            FOUND_${LIB_NAME}_STATIC
+            ${LIB_NAME}
+    )
+
+    if (FOUND_${LIB_NAME}_STATIC)
+        get_filename_component(ABS_FILE ${FOUND_${LIB_NAME}_STATIC} ABSOLUTE)
+    else()
+        message(SEND_ERROR "Unable to find library ${LIB_NAME}")
+    endif()
+
+    set(${OUT} ${ABS_FILE} PARENT_SCOPE)
+
+endfunction()
+
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -108,7 +131,8 @@ add_compile_definitions(SOL_ALL_SAFETIES_ON=1)
 #    message(STATUS "${_variableName}=${${_variableName}}")
 #endforeach()
 
-target_link_libraries(raytracer_release PRIVATE lua)
+find_static_library(lua LUA_STATIC)
+target_link_libraries(raytracer_release PRIVATE ${LUA_STATIC})
 target_link_libraries(raytracer_release PRIVATE glfw)
 target_link_libraries(raytracer_release PRIVATE GLEW::GLEW)
 target_link_libraries(raytracer_release PRIVATE ${OPENGL_LIBRARIES})
@@ -167,6 +191,7 @@ add_executable(raytracer_test
 
 target_include_directories(raytracer_test PRIVATE src)
 target_include_directories(raytracer_test PRIVATE lib/linalg/)
+
 
 target_link_libraries(raytracer_test PRIVATE doctest::doctest)
 target_link_libraries(raytracer_test PRIVATE glfw)

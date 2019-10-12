@@ -6,7 +6,6 @@
 
 #include <doctest/doctest.h>
 #include <universe.h>
-#include <glm/ext/matrix_transform.hpp>
 #include "spaceconversion.h"
 
 
