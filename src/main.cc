@@ -8,6 +8,7 @@
 #include "window.h"
 #include "raytracer.h"
 #include "rgbimage.h"
+#include "rgbimagethreaded.h"
 #include "glfwmanager.h"
 #include "gui.h"
 #include "arguments.h"
@@ -33,8 +34,8 @@ int main(int ac, char **av) {
     spdlog::info("Window initialized");
 
     GLFWManager::addErrorCallback([] (int error, const char* description){
-        //spdlog::critical(std::string(description));
-        //exit(1);
+        spdlog::critical(std::string(description));
+        exit(1);
     });
 
     GLFWManager::addKeyPressCallback([] (GLFWwindow* window, int key, int scancode, int action, int mods){
@@ -67,7 +68,7 @@ int main(int ac, char **av) {
         fileBrowserWindow = FileBrowserWindow(args.scriptDirectory.value(), gui);
     }
 
-    auto mapWindow = MapWindow(gui);
+    //auto mapWindow = MapWindow(gui);
 
     spdlog::info("Starting Render Loop");
 
@@ -81,14 +82,13 @@ int main(int ac, char **av) {
             auto selectedPath = fileBrowserWindow->draw();
             if (selectedPath != std::nullopt) {
                 const auto universeData = luaBinding.loadUniverseFromScript(selectedPath.value());
-                auto rgbImage = RGBImage(1280, 720);
+                auto rgbImage = RGBImageThreaded(4, 1280, 720);
                 auto rayTracer = RayTracer(rgbImage, universeData.world, universeData.lightTransport, universeData.eyeMatrix);
                 rayTracer.generateImage();
-                fullscreenquad.setImage(rgbImage.getRGBData(), rgbImage.getXRes(), rgbImage.getYRes());
             }
         }
 
-        mapWindow.render(window.getWindowPointer());
+        //mapWindow.render(window.getWindowPointer());
         fullscreenquad.render(window.getWindowPointer());
 
         gui->render();

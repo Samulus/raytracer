@@ -91,7 +91,7 @@ add_executable(raytracer_release
         src/fullscreenquad.cpp
         src/fullscreenquad.h
         src/phonglighting.cpp
-        src/phonglighting.h)
+        src/phonglighting.h src/rgbimagethreaded.cpp src/rgbimagethreaded.h)
 
 
 # Local Libraries
@@ -168,7 +168,7 @@ add_executable(raytracer_test
         src/mollertrumbore.h
         src/mollertrumbore.cpp
         src/triangle.cpp
-        src/triangle.h)
+        src/triangle.h src/rgbimagethreaded.cpp src/rgbimagethreaded.h)
 
 target_include_directories(raytracer_test PRIVATE src)
 target_include_directories(raytracer_test PRIVATE lib/linalg/)

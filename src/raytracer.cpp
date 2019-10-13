@@ -14,7 +14,7 @@ static constexpr auto SKY_DARK_COLOR = linalg::vec<float,3>{0, 0.19607f, 0.29803
 static unsigned int MAXIMUM_REFLECTION_RECURSION = 5;
 
 RayTracer::RayTracer(
-        RGBImage& rgbImage, 
+        RGBImageThreaded& rgbImage,
         const World& world, 
         const LightTransport& lightTransport) :
             rgbImage(rgbImage),
@@ -24,7 +24,7 @@ RayTracer::RayTracer(
 }
 
 RayTracer::RayTracer(
-        RGBImage& rgbImage,
+        RGBImageThreaded& rgbImage,
         const World& world,
         const LightTransport& lightTransport,
         const linalg::mat<float, 4,4>& translation) :
@@ -38,7 +38,7 @@ void RayTracer::generateImage() {
     const auto maxWidth = rgbImage.getXRes();
     const auto maxHeight = rgbImage.getYRes();
 
-    rgbImage.forEachPixel(
+    rgbImage.forEachPixelInParallel(
             [&](GLubyte& r, GLubyte& g, GLubyte& b, unsigned int x, unsigned int y) -> void {
                 // TODO: Do NOT ignore the `translation` argument
                 auto primaryRay = SpaceConversion::pixelToPrimaryRay(x, y, maxWidth, maxHeight, 50);

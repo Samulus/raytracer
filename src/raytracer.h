@@ -6,23 +6,23 @@
 
 #pragma once
 
-#include "rgbimage.h"
+#include "rgbimagethreaded.h"
 #include "world.h"
 #include "ray.h"
 #include "lighttransport.h"
 
 class RayTracer {
 private:
-    RGBImage& rgbImage;
+    RGBImageThreaded& rgbImage;
     const World& world;
     const LightTransport& lightTransport;
     const linalg::mat<float, 4,4> translation;
 public:
-    RayTracer(RGBImage& rgbImage,
+    RayTracer(RGBImageThreaded& rgbImage,
               const World& world,
               const LightTransport& lightTransport);
 
-    RayTracer(RGBImage& rgbImage,
+    RayTracer(RGBImageThreaded& rgbImage,
               const World& world,
               const LightTransport& lightTransport,
               const linalg::mat<float,4,4>& translation);
