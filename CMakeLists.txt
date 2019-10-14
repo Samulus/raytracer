@@ -168,7 +168,7 @@ add_executable(raytracer_test
         src/mollertrumbore.h
         src/mollertrumbore.cpp
         src/triangle.cpp
-        src/triangle.h src/rgbimagethreaded.cpp src/rgbimagethreaded.h)
+        src/triangle.h src/rgbimagethreaded.cpp src/rgbimagethreaded.h test/testrgbimagethreaded.cpp)
 
 target_include_directories(raytracer_test PRIVATE src)
 target_include_directories(raytracer_test PRIVATE lib/linalg/)

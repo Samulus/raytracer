@@ -9,24 +9,25 @@
 #include <vector>
 #include <functional>
 #include <stdexcept>
+#include <thread>
 #include <mutex>
+#include <atomic>
 
 class RGBImageThreaded {
     unsigned int xRes;
     unsigned int yRes;
-    std::mutex lock;
+    std::mutex imageGenerationMutex;
+    std::atomic<size_t> activeThreadCount;
     std::vector<GLubyte> byteData;
     std::vector<std::thread> threads;
 public:
     RGBImageThreaded(unsigned int numberThreads, unsigned int xRes, unsigned int yRes);
     ~RGBImageThreaded();
-    const std::vector<GLubyte>& getPixelData();
+    [[nodiscard]] const std::vector<GLubyte> & getPixelData() const;
     unsigned int getXRes();
     unsigned int getYRes();
-    bool isImageComplete();
+    bool isImageBeingGenerated();
     void forEachPixelInParallel(
             const std::function<void(GLubyte& r, GLubyte& g, GLubyte& b, unsigned int x, unsigned int y)>& lambda
     );
-private:
-    void parallelSplit();
 };

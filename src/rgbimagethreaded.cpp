@@ -6,22 +6,27 @@
 
 #include "rgbimagethreaded.h"
 #include <stdexcept>
+#include <spdlog/spdlog.h>
+#include <iostream>
 
 RGBImageThreaded::RGBImageThreaded(unsigned int threadCount, unsigned int xRes, unsigned int yRes) :
-    xRes(xRes), yRes(yRes), threads(std::vector<std::thread>()), byteData(std::vector<GLubyte>(xRes * yRes * 3, 0)) {
+        xRes(xRes), yRes(yRes),
+        threads(std::vector<std::thread>()),
+        byteData(std::vector<GLubyte>(xRes * yRes * 3, 0)),
+        activeThreadCount(0) {
 
     if (threadCount == 0) {
         throw std::logic_error("threadCount was 0");
     }
 
-    for (unsigned int i=0; i < threadCount; ++i) {
+    for (unsigned int i = 0; i < threadCount; ++i) {
         threads.emplace_back(std::thread());
     }
 }
 
 RGBImageThreaded::~RGBImageThreaded() = default;
 
-const std::vector<GLubyte>& RGBImageThreaded::getPixelData() {
+const std::vector<GLubyte> &RGBImageThreaded::getPixelData() const {
     return this->byteData;
 }
 
@@ -33,31 +38,51 @@ unsigned int RGBImageThreaded::getYRes() {
     return yRes;
 }
 
-bool RGBImageThreaded::isImageComplete() {
-    std::unique_lock<std::mutex> guard(lock);
-    return guard.try_lock();
+bool RGBImageThreaded::isImageBeingGenerated() {
+    if (this->imageGenerationMutex.try_lock()) {
+        this->imageGenerationMutex.unlock();
+        return false;
+    }
+
+    return true;
 }
 
 void RGBImageThreaded::forEachPixelInParallel(
         const std::function<void(GLubyte &r, GLubyte &g, GLubyte &b, unsigned int x, unsigned int y)> &lambda) {
 
-    const auto callLambdaWithBytes = [&](unsigned int startIndex, unsigned int endIndex) {
-        for (unsigned int i=startIndex; i < endIndex; i += 3) {
-            auto x = (i / 3) % xRes;
-            auto y = (i / 3) / xRes;
+    if (!this->imageGenerationMutex.try_lock()) {
+        throw std::runtime_error("Thread already running");
+    }
+
+    spdlog::trace("RGBImageThreaded -> Locking Thread(s)");
+
+    const auto callLambdaWithBytes = [&](size_t startIndex, size_t endIndex) {
+        for (size_t i = startIndex; i < endIndex; i += 3) {
+            auto x = static_cast<size_t>((i / 3) % xRes);
+            auto y = static_cast<size_t>((i / 3) / xRes);
             lambda.operator()(byteData[i], byteData[i + 1], byteData[i + 2], x, y);
+        }
+        activeThreadCount--;
+        if (activeThreadCount == 0) {
+            spdlog::info("RGBImageThreaded:: All Thread(s) Complete");
+            this->imageGenerationMutex.unlock();
         }
     };
 
-    std::lock_guard<std::mutex> guard(lock);
 
-    unsigned int threadPixelWorkload = (byteData.size() / threads.size()) - 1;
-    unsigned int lastIndex = 0;
-    for (auto& t : threads) {
-        unsigned int startIndex = lastIndex;
-        unsigned int endIndex = lastIndex + threadPixelWorkload;
+    size_t threadPixelWorkload = (byteData.size() / threads.size()) - 1;
+    size_t lastIndex = 0;
+    spdlog::trace("RGBImageThreaded -> Spawning Threads");
+
+    for (auto &t : threads) {
+        size_t startIndex = lastIndex;
+        size_t endIndex = lastIndex + threadPixelWorkload;
         lastIndex += threadPixelWorkload + 1;
-        t = std::thread {callLambdaWithBytes, startIndex, endIndex };
+        activeThreadCount++;
+        t = std::thread{callLambdaWithBytes, startIndex, endIndex};
+        t.detach();
     }
+
+    spdlog::trace("RGBImageThreaded -> Threads Running in Background");
 }
 
