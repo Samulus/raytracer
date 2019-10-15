@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.9)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set (CMAKE_CXX_STANDARD 17)
-project(raytracer VERSION 0.0.0 DESCRIPTION "Simple raytracer" LANGUAGES CXX)
 
 # Seek out the highest versions
 set(CMAKE_FIND_PACKAGE_SORT_ORDER NATURAL)
 set(CMAKE_FIND_PACKAGE_SORT_DIRECTION DEC)
+
+set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GLEW REQUIRED)
@@ -109,11 +111,11 @@ target_link_directories(raytracer_release PRIVATE ${LUA_LIBRARY}/../)
 add_compile_definitions(SOL_ALL_SAFETIES_ON=1)
 
 # Debugging: Print all CMake Variables
-get_cmake_property(_variableNames VARIABLES)
-list (SORT _variableNames)
-foreach (_variableName ${_variableNames})
-    message(STATUS "${_variableName}=${${_variableName}}")
-endforeach()
+#get_cmake_property(_variableNames VARIABLES)
+#list (SORT _variableNames)
+#foreach (_variableName ${_variableNames})
+    #message(STATUS "${_variableName}=${${_variableName}}")
+#endforeach()
 
 target_link_libraries(raytracer_release PRIVATE lua)
 target_link_libraries(raytracer_release PRIVATE glfw)
