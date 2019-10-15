@@ -6,6 +6,7 @@
 
 #pragma once
 #include <linalg.h>
+#include <iostream>
 
 class Ray {
 public:
@@ -17,4 +18,6 @@ public:
     Ray(const linalg::vec<float,3>& origin, const linalg::vec<float,3>& direction);
     Ray& operator=(const Ray& other);
     [[nodiscard]] linalg::vec<float,3> pointWithScalar(float t) const;
+
+    friend std::ostream& operator<<(std::ostream& out, const Ray& ray);
 };

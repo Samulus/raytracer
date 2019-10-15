@@ -12,7 +12,36 @@
 #include "rgbimagethreaded.h"
 #include "diffuselighting.h"
 #include "raytracer.h"
+#include "linalg.h"
+using namespace linalg::ostream_overloads;
 
+// New Functional Impl
+TEST_CASE("Primary Ray Generation is OK for 3x3 px scene") {
+    const auto imageWidthPx = 3;
+    const auto imageHeightPx = 3;
+    const auto totalPx = imageWidthPx * imageHeightPx;
+    const auto fovDegrees = 50;
+
+    auto primaryRays = FunctionalRayTracer::generatePrimaryRaysForScene(imageWidthPx, imageHeightPx, fovDegrees);
+
+    REQUIRE_EQ(primaryRays.size(), totalPx);
+
+    // ----------------------------
+    // |        |         |       |
+    // ----------------------------
+    // |        |         |       |
+    // ----------------------------
+    // |        |         |       |
+    // ----------------------------
+
+    for (auto& r : primaryRays) {
+        REQUIRE_EQ(linalg::aliases::float3(), r.origin);
+        REQUIRE_EQ(0, r.depth);
+        std::cout << r << std::endl;
+    }
+}
+
+// Old Impl
 TEST_CASE("Sphere behind another sphere is NOT reported as the nearest sphere.") {
     auto world = World();
     const auto OPAQUE_WHITE = Material(WHITE, AVERAGE_ALBEDO, MaterialType::Diffuse, 0.0f);

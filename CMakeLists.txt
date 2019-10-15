@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
+project(raytracer)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set (CMAKE_CXX_STANDARD 17)
 
@@ -6,8 +7,10 @@ set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_FIND_PACKAGE_SORT_ORDER NATURAL)
 set(CMAKE_FIND_PACKAGE_SORT_DIRECTION DEC)
 
-set(CMAKE_CXX_FLAGS_RELEASE "/MT")
-set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+        set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+endif()
 
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GLEW REQUIRED)
@@ -40,8 +43,8 @@ add_executable(raytracer_release
         src/sphere.h
         src/ray.cpp
         src/ray.h
-        src/spaceconversion.cpp
-        src/spaceconversion.h
+        src/coordinateconversion.cpp
+        src/coordinateconversion.h
         src/geometry.h
         src/sphere.cpp
         src/sphere.h
@@ -93,7 +96,9 @@ add_executable(raytracer_release
         src/fullscreenquad.cpp
         src/fullscreenquad.h
         src/phonglighting.cpp
-        src/phonglighting.h src/rgbimagethreaded.cpp src/rgbimagethreaded.h)
+        src/phonglighting.h
+        src/rgbimagethreaded.cpp
+        src/rgbimagethreaded.h)
 
 
 # Local Libraries
@@ -145,8 +150,8 @@ add_executable(raytracer_test
         src/geometry.h
         src/rgbimage.cpp
         src/rgbimage.h
-        src/spaceconversion.cpp
-        src/spaceconversion.h
+        src/coordinateconversion.cpp
+        src/coordinateconversion.h
         src/ray.cpp
         src/ray.h
         src/plane.cpp
@@ -170,7 +175,10 @@ add_executable(raytracer_test
         src/mollertrumbore.h
         src/mollertrumbore.cpp
         src/triangle.cpp
-        src/triangle.h src/rgbimagethreaded.cpp src/rgbimagethreaded.h test/testrgbimagethreaded.cpp)
+        src/triangle.h
+        src/rgbimagethreaded.cpp
+        src/rgbimagethreaded.h
+        test/testrgbimagethreaded.cpp)
 
 target_include_directories(raytracer_test PRIVATE src)
 target_include_directories(raytracer_test PRIVATE lib/linalg/)

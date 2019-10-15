@@ -5,7 +5,7 @@
 //
 
 #include "diffuselighting.h"
-#include "spaceconversion.h"
+#include "coordinateconversion.h"
 #include <algorithm>
 static float SHADOW_BIAS = 1e-4f;
 DiffuseLighting::~DiffuseLighting() = default;

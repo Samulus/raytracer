@@ -6,10 +6,21 @@
 
 #pragma once
 
+#include <algorithm>
 #include "rgbimagethreaded.h"
 #include "world.h"
 #include "ray.h"
 #include "lighttransport.h"
+
+namespace FunctionalRayTracer {
+    std::vector<Ray> generatePrimaryRaysForScene(size_t maxWidth, size_t maxHeight, uint8_t fovDegrees);
+
+    // take (maxWidth, maxHeight) ->
+    // stream of rays ->
+    // stream of collided of collided objects OR nothing ->
+    // if collidedObject present then lightTransport.calculatePixelColor otherwise bg color
+    // result -> rgba byte data
+}
 
 class RayTracer {
 private:

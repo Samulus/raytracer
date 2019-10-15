@@ -4,11 +4,26 @@
 // Date: 08/25/2019
 //
 
+#include <cassert>
 #include "raytracer.h"
 #include "lerp.h"
-#include "spaceconversion.h"
-#include <cassert>
+#include "coordinateconversion.h"
+#include "glfwmanager.h"
 
+// New Impl
+std::vector<Ray> FunctionalRayTracer::generatePrimaryRaysForScene(size_t maxWidth, size_t maxHeight, uint8_t fovDegrees) {
+    const auto pixels = maxWidth * maxHeight;
+    auto result = std::vector<Ray>();
+    for (size_t i = 0; i < pixels; i++) {
+        auto x = static_cast<size_t>((i / 3) % maxWidth);
+        auto y = static_cast<size_t>((i / 3) / maxWidth);
+        result.emplace_back(CoordinateConversion::imageCoordinateToPrimaryRay(x, y, maxWidth, maxHeight, fovDegrees));
+    }
+    return result;
+}
+
+
+// Old Impl
 static constexpr auto SKY_LIGHT_COLOR = linalg::vec<float,3>{0.8f, 0.8f, 0.8f};
 static constexpr auto SKY_DARK_COLOR = linalg::vec<float,3>{0, 0.19607f, 0.298039f};
 static unsigned int MAXIMUM_REFLECTION_RECURSION = 5;
@@ -41,7 +56,7 @@ void RayTracer::generateImage() {
     rgbImage.forEachPixelInParallel(
             [&](GLubyte& r, GLubyte& g, GLubyte& b, unsigned int x, unsigned int y) -> void {
                 // TODO: Do NOT ignore the `translation` argument
-                auto primaryRay = SpaceConversion::pixelToPrimaryRay(x, y, maxWidth, maxHeight, 50);
+                auto primaryRay = CoordinateConversion::imageCoordinateToPrimaryRay(x, y, maxWidth, maxHeight, 50);
                 auto primaryRayCollision = findNearestRayCollision(primaryRay);
 
                 if (primaryRayCollision.hitObject == std::nullopt) {
