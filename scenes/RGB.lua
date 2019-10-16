@@ -47,4 +47,3 @@ for _, light in ipairs(Lighting) do
 end
 
 return UniverseData.new(Universe.world, Universe.lightTransport, Universe.eyeMatrix)
---]]

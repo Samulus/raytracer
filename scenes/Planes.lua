@@ -28,7 +28,7 @@ local Universe = {
 }
 
 local Geometry = {
-    Sphere.new(Vec3f.new(0.0, 0, -1), 0.1, Material.white),
+    Sphere.new(Vec3f.new(0.0, 0, -3), 1.0, Material.white),
     Plane.new(Vec3f.new(0.0, 0, 0.1), Vec3f.new(0, 1, 0), Material.white),
 }
 

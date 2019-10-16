@@ -63,7 +63,9 @@ CoordinateConversion::screenToCamera(
         float fovDegrees) {
     auto rads = (fovDegrees * PI / 180.0f);
     auto fov = tanf(rads / 2.0f);
-    float pixelCameraX = (2.0f * screenCoordinates.x - 1.0f) * imageAspectRatio * fov;
-    float pixelCameraY = (-1.0f  - 2.0f * screenCoordinates.y) * fov;
+    float pixelCameraX = screenCoordinates.x * imageAspectRatio * fov;
+    float pixelCameraY = -1 * screenCoordinates.y * fov;
+    //float pixelCameraX = (2.0f * screenCoordinates.x - 1.0f) * imageAspectRatio * fov;
+    //float pixelCameraY = (-1.0f  - 2.0f * screenCoordinates.y) * fov;
     return linalg::vec<float,2>(pixelCameraX, pixelCameraY);
 }
