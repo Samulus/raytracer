@@ -26,26 +26,31 @@ LuaBinding::LuaBinding() : global(sol::state()){
 
     // Math
     auto vec1f = global.new_usertype<float1>("Vec1f",
+        sol::call_construction(),
         sol::constructors<float1(), float1(float)>(),
         sol::meta_function::to_string, [] (const float1& v) { std::ostringstream output; output << v; return output.str();
     });
 
     auto vec2f = global.new_usertype<float2>("Vec2f",
+        sol::call_construction(),
         sol::constructors<float2(), float2(float, float)>(),
         sol::meta_function::to_string, [] (const float2& v) { std::ostringstream output; output << v; return output.str();
     });
 
     auto vec3f = global.new_usertype<float3>("Vec3f",
+        sol::call_construction(),
         sol::constructors<float3(), float3(float, float, float)>(),
         sol::meta_function::to_string, [] (const float3& v) { std::ostringstream output; output << v; return output.str();
     });
 
     auto vec4f = global.new_usertype<float4>("Vec4f",
+        sol::call_construction(),
         sol::constructors<float4(), float4(float, float, float, float)>(),
         sol::meta_function::to_string, [] (const float4& v) { std::ostringstream output; output << v; return output.str();
     });
 
     auto mat4f = global.new_usertype<float4x4>("Mat4f",
+        sol::call_construction(),
         sol::constructors<float4x4()>(),
         sol::meta_function::to_string, [] (const float4x4& m) { std::ostringstream output; output << m; return output.str();
     });
@@ -56,25 +61,29 @@ LuaBinding::LuaBinding() : global(sol::state()){
         "Diffuse", MaterialType::Diffuse
     );
 
-    auto material = global.new_usertype<Material>(
-            "Material", sol::constructors<Material(float3, float3, MaterialType, float)>());
-
+    auto material = global.new_usertype<Material>("Material",
+        sol::call_construction(),
+        sol::constructors<Material(float3, float3, MaterialType, float)>()
+    );
 
     // Light Types
     auto light = global.new_usertype<Light>("Light");
 
     auto sunLight = global.new_usertype<SunLight>("SunLight",
+        sol::call_construction(),
         sol::constructors<SunLight(float3, float3, float)>(),
         sol::base_classes, sol::bases<Light>()
     );
 
     auto pointLight = global.new_usertype<SunLight>("PointLight",
+        sol::call_construction(),
         sol::constructors<PointLight(float3, float3, float)>(),
         sol::base_classes, sol::bases<Light>()
     );
 
     // Light Transport Algorithms
     auto diffuseLighting = global.new_usertype<DiffuseLighting>("DiffuseLighting",
+        sol::call_construction(),
         sol::constructors<DiffuseLighting()>(),
         "addLight", [](DiffuseLighting& diffuseLighting, Light& light) {
             auto* sunLight = dynamic_cast<SunLight*>(&light);
@@ -97,8 +106,9 @@ LuaBinding::LuaBinding() : global(sol::state()){
     );
 
     // World
-    auto world = global.new_usertype<World>(
-        "World", sol::constructors<World()>(),
+    auto world = global.new_usertype<World>("World",
+        sol::call_construction(),
+        sol::constructors<World()>(),
         "addGeometry", [] (World& world, Geometry& geometry) {
             auto* sphere = dynamic_cast<Sphere*>(&geometry);
             if (sphere != nullptr) {
@@ -125,17 +135,20 @@ LuaBinding::LuaBinding() : global(sol::state()){
     // Geometry
     auto geometry = global.new_usertype<Geometry>("Geometry");
     auto sphere = global.new_usertype<Sphere>("Sphere",
+        sol::call_construction(),
         sol::constructors<Sphere(float3, float, Material)>(),
         sol::base_classes, sol::bases<Geometry>()
     );
 
     auto plane = global.new_usertype<Plane>("Plane",
+        sol::call_construction(),
         sol::constructors<Plane(float3, float3, Material)>(),
         sol::base_classes, sol::bases<Geometry>()
     );
 
     // Universe Data
     auto universeData = global.new_usertype<UniverseData>("UniverseData",
+        sol::call_construction(),
         sol::constructors<UniverseData(World, LightTransport&, float4x4)>()
     );
 }
