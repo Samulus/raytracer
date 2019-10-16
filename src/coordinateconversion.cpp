@@ -35,7 +35,8 @@ Ray CoordinateConversion::imageCoordinateToPrimaryRay(
     auto screen = ndcToScreen(ndc);
     auto camera = screenToCamera(screen, float(widthPx) / float(heightPx), fovDegrees);
     auto origin = linalg::aliases::float3();
-    auto direction = linalg::normalize(linalg::aliases::float3(camera.x, camera.y, -1));
+    auto camera3f = linalg::aliases::float3(camera, -1);
+    auto direction = linalg::normalize(camera3f);
     return Ray(origin, direction);
 }
 
@@ -56,10 +57,13 @@ linalg::vec<float,2> CoordinateConversion::ndcToScreen(const linalg::vec<float,2
 }
 
 linalg::vec<float,2>
-CoordinateConversion::screenToCamera(const linalg::vec<float,2>& screenCoordinates, float imageAspectRatio, float fovDegrees) {
+CoordinateConversion::screenToCamera(
+        const linalg::vec<float,2>& screenCoordinates,
+        float imageAspectRatio,
+        float fovDegrees) {
     auto rads = (fovDegrees * PI / 180.0f);
     auto fov = tanf(rads / 2.0f);
-    float pixelCameraX = -1 * screenCoordinates.x * imageAspectRatio * fov;
-    float pixelCameraY = -1 * screenCoordinates.y * fov;
+    float pixelCameraX = (2.0f * screenCoordinates.x - 1.0f) * imageAspectRatio * fov;
+    float pixelCameraY = (-1.0f  - 2.0f * screenCoordinates.y) * fov;
     return linalg::vec<float,2>(pixelCameraX, pixelCameraY);
 }

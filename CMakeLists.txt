@@ -10,6 +10,7 @@ set(CMAKE_FIND_PACKAGE_SORT_DIRECTION DEC)
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         set(CMAKE_CXX_FLAGS_RELEASE "/MT")
         set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
+        message("MSVC detected")
 endif()
 
 find_package(glfw3 CONFIG REQUIRED)
@@ -138,7 +139,7 @@ add_executable(raytracer_test
         # Test Cases
         test/test.cpp
         test/testrgbimage.cpp
-        test/testspaceconversion.cpp
+        test/testcoordianteconversion.cpp
         test/testsphere.cpp
         test/testlighttransport.cpp
         test/testdiffuselighting.cpp

@@ -26,19 +26,27 @@ TEST_CASE("Primary Ray Generation is OK for 3x3 px scene") {
 
     REQUIRE_EQ(primaryRays.size(), totalPx);
 
-    // ----------------------------
-    // |        |         |       |
-    // ----------------------------
-    // |        |         |       |
-    // ----------------------------
-    // |        |         |       |
-    // ----------------------------
-
     for (auto& r : primaryRays) {
         REQUIRE_EQ(linalg::aliases::float3(), r.origin);
         REQUIRE_EQ(0, r.depth);
-        std::cout << r << std::endl;
     }
+
+    // Expected Polarity of each primary ray for 3x3 image
+    // ----------------------------
+    // | -x, +y | 0, +y  | +x  +y |
+    // ----------------------------
+    // | -x  0  | 0   0  | +x   0 |
+    // ----------------------------
+    // | -x -y  | 0  -y  | +x  -y |
+    // ----------------------------
+
+
+    // Top row
+    const auto& r = primaryRays;
+    REQUIRE(r[0].direction.x < 0);
+    REQUIRE(r[0].direction.y > 0);
+    REQUIRE(r[0].direction.z == doctest::Approx(0));
+
 }
 
 // Old Impl

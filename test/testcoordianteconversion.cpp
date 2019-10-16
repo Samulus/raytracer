@@ -1,5 +1,5 @@
 //
-// testspaceconversion.cpp
+// testcoordinateconversion.cpp
 // Author: Samuel Vargas
 // Date: 08/25/2019
 //

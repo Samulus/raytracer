@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include "rgbimagethreaded.h"
+#include "rgbimage.h"
 #include "world.h"
 #include "ray.h"
 #include "lighttransport.h"
@@ -24,16 +25,16 @@ namespace FunctionalRayTracer {
 
 class RayTracer {
 private:
-    RGBImageThreaded& rgbImage;
+    RGBImage& rgbImage;
     const World& world;
     const LightTransport& lightTransport;
     const linalg::mat<float, 4,4> translation;
 public:
-    RayTracer(RGBImageThreaded& rgbImage,
+    RayTracer(RGBImage& rgbImage,
               const World& world,
               const LightTransport& lightTransport);
 
-    RayTracer(RGBImageThreaded& rgbImage,
+    RayTracer(RGBImage& rgbImage,
               const World& world,
               const LightTransport& lightTransport,
               const linalg::mat<float,4,4>& translation);

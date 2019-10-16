@@ -82,9 +82,11 @@ int main(int ac, char **av) {
             auto selectedPath = fileBrowserWindow->draw();
             if (selectedPath != std::nullopt) {
                 const auto universeData = luaBinding.loadUniverseFromScript(selectedPath.value());
-                auto rgbImage = RGBImageThreaded(4, 1280, 720);
+                auto rgbImage = RGBImage( 1280, 720);
                 auto rayTracer = RayTracer(rgbImage, universeData.world, universeData.lightTransport, universeData.eyeMatrix);
                 rayTracer.generateImage();
+
+                fullscreenquad.setImage(rgbImage.getRGBData(), rgbImage.getXRes(), rgbImage.getYRes());
             }
         }
 
