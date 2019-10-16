@@ -35,7 +35,8 @@ local Geometry = {
 }
 
 local Lighting = {
-    SunLight(Vec3f(0, -1, -1), Color.white, 25),
+    --SunLight(Vec3f(0, -1, -1), Color.white, 25),
+    PointLight(Vec3f(1, -1, -1), Color.white, 25),
 }
 
 for _, geo in ipairs(Geometry) do
