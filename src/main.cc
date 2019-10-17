@@ -13,10 +13,8 @@
 #include "gui.h"
 #include "arguments.h"
 #include "luabinding.h"
-#include "filebrowserwindow.h"
+#include "sceneselectionwindow.h"
 #include "fullscreenquad.h"
-#include "mapwindow.h"
-#include "maprenderer.h"
 #include <optional>
 #include <spdlog/spdlog.h>
 
@@ -29,8 +27,8 @@ int main(int ac, char **av) {
     }
 
     auto luaBinding = LuaBinding();
-
     auto window = Window();
+
     spdlog::info("Window initialized");
 
     GLFWManager::addErrorCallback([] (int error, const char* description){
@@ -63,9 +61,9 @@ int main(int ac, char **av) {
 
     // UI
     auto gui = std::make_shared<Gui>(Gui(window.getWindowPointer()));
-    std::optional<FileBrowserWindow> fileBrowserWindow = std::nullopt;
+    std::optional<SceneSelectionWindow> fileBrowserWindow = std::nullopt;
     if (args.scriptDirectory != std::nullopt) {
-        fileBrowserWindow = FileBrowserWindow(args.scriptDirectory.value(), gui);
+        fileBrowserWindow = SceneSelectionWindow(args.scriptDirectory.value(), gui);
     }
 
     //auto mapWindow = MapWindow(gui);

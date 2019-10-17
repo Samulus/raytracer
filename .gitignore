@@ -42,3 +42,7 @@ cmake-build-debug/*
 out/*
 CMakeSettings.json
 **/cmake-build-**/*
+
+# Imgui
+**/imgui.in
+

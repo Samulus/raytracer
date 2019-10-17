@@ -1,18 +1,22 @@
 //
-// filebrowserwindow.cpp
+// sceneselectionwindow.cpp
 // Author: Samuel Vargas 
 // Date: 09/18/2019
 //
 
-#include "filebrowserwindow.h"
+//
+// Hardcoded Lua scenes
+//
 
-FileBrowserWindow::FileBrowserWindow(const std::filesystem::path& path, const std::shared_ptr<Gui>& gui) : path(path), gui(gui) {
+#include "sceneselectionwindow.h"
+
+SceneSelectionWindow::SceneSelectionWindow(const std::filesystem::path& path, const std::shared_ptr<Gui>& gui) : path(path), gui(gui) {
     reloadDirectory();
 }
 
-FileBrowserWindow::~FileBrowserWindow() = default;
+SceneSelectionWindow::~SceneSelectionWindow() = default;
 
-std::optional<std::filesystem::path> FileBrowserWindow::draw() {
+std::optional<std::filesystem::path> SceneSelectionWindow::draw() {
     ImGui::Begin("Scenes");
     if (ImGui::Button("Scan")) {
         reloadDirectory();
@@ -30,7 +34,7 @@ std::optional<std::filesystem::path> FileBrowserWindow::draw() {
     return std::nullopt;
 }
 
-void FileBrowserWindow::reloadDirectory() {
+void SceneSelectionWindow::reloadDirectory() {
     paths.clear();
     for (const auto& file : std::filesystem::directory_iterator(path)) {
         paths.emplace_back(file.path());

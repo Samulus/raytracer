@@ -87,8 +87,8 @@ add_executable(raytracer_release
         src/version.h
         src/universedata.h
         src/universedata.cpp
-        src/filebrowserwindow.cpp
-        src/filebrowserwindow.h
+        src/sceneselectionwindow.cpp
+        src/sceneselectionwindow.h
         src/mapwindow.cpp
         src/mapwindow.h
         src/gl_glfw.h
