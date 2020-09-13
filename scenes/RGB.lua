@@ -1,6 +1,6 @@
 --
 -- RGB.lua
--- Author: Samuel Vargas 
+-- Author: Samuel Vargas
 -- Date: 09/15/2019
 --
 

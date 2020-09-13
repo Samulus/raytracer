@@ -1,6 +1,6 @@
 //
 // procedualvertexbuffer.cpp
-// Author: Samuel Vargas 
+// Author: Samuel Vargas
 // Date: 09/14/2019
 //
 
@@ -20,10 +20,6 @@ GLvoid* ProcedualVertexBuffer::unitWireFrameBuffer(linalg::vec<float, 3> color) 
          0.5,  0.5,  0.5, // upper front right vertex
         -0.5, -0.5,  0.5, // bottom front left vertex
          0.5, -0.5,  0.5  // bottom front right vertex
-    };
-
-    std::vector<GLuint> indices = {
-
     };
 
     return nullptr;

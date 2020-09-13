@@ -1,6 +1,6 @@
 //
 // gl_glfw.h
-// Author: Samuel Vargas 
+// Author: Samuel Vargas
 // Date: 09/20/2019
 //
 

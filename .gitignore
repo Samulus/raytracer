@@ -46,3 +46,7 @@ CMakeSettings.json
 # Imgui
 **/imgui.in
 
+# Build System
+.tup
+build
+build_test

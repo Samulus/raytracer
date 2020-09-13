@@ -1,6 +1,6 @@
 //
 // procedualvertexbuffer.h
-// Author: Samuel Vargas 
+// Author: Samuel Vargas
 // Date: 09/14/2019
 //
 

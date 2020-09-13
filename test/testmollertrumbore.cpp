@@ -1,6 +1,6 @@
 //
 // testmollertrumbore.cpp
-// Author: Samuel Vargas 
+// Author: Samuel Vargas
 // Date: 09/02/2019
 //
 
